@@ -37,6 +37,7 @@ Requisitos Funcionais / Funcionalidades:
 ### [História de Usuários](https://docs.google.com/document/d/1-i16qtuT6SRj2m4C9Nv3nBQ4aFyuRS_4MnmMf7GGBt8/edit?usp=sharing)
 ### [Descrição do Projeto | MER | Rascunho dos protótipos](https://docs.google.com/document/d/1pOPrBcSiAA3NI0us8a3VZT5xz2uDA2rIdM4e_u2QLuo/edit?usp=sharing)
 ### [Pitch](https://www.canva.com/design/DAGKmEbC6XA/sP4n-nDbR6zSqpXV_skEDA/edit?utm_content=DAGKmEbC6XA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+### [Rascunho incial dos Milestones](https://docs.google.com/document/d/1sLK28kE6wJyAq0jMCiW2YMuemoc3-ybGTcyGP_JO618/edit#heading=h.nnslpstl1z8a)
 
 
 ## :hammer_and_wrench: Tecnologias Usadas
