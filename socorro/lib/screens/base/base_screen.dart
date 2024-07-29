@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:socorro/models/page_manager.dart';
 
 class BaseScreen extends StatelessWidget {
   final PageController pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        Scaffold(
+    return Provider(
+      create: (_) => PageManager(pageController),
+      child: PageView(
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          Scaffold(
             appBar: AppBar(
-          title: const Text('Home'),
-        )),
-        Container(
-          color: Colors.red,
-        ),
-        Container(
-          color: Colors.yellow,
-        ),
-        Container(
-          color: Colors.green,
-        ),
-      ],
+              title: const Text('Home'),
+              backgroundColor: Colors.red,
+            ),
+          ),
+          Container(
+            color: Colors.red,
+          ),
+          Container(
+            color: Colors.yellow,
+          ),
+          Container(
+            color: Colors.green,
+          ),
+        ],
+      ),
     );
   }
 }
