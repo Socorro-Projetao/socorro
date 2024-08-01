@@ -2,7 +2,7 @@
 <img src="https://github.com/user-attachments/assets/6ac7aa47-125a-4307-8a5e-fe2a624c4a9d" alt="Logotipo" width="35%">
 
 ## :octocat: Integrantes
-[Antonio B.](https://github.com/antoniobezerra01) | [J. Elias](https://github.com/Eliaz500) | [Erik A.](https://github.com/Alexandreerik) | [Giclayne Y.](https://github.com/giclayne) | [Hadassa E.](https://github.com/Hester910)
+[Antonio B.](https://github.com/antoniobezerra01) | [Erik A.](https://github.com/Alexandreerik) | [J. Elias](https://github.com/Eliaz500) | [Giclayne Y.](https://github.com/giclayne) | [Hadassa E.](https://github.com/Hester910)
 
 ## :page_with_curl: Sobre o Projeto
 O projeto é referente a disciplina de __Projeto de Desenvolvimento - Projetão__ ministrada pelo Professor Dr. [Rodrigo Rocha](https://github.com/rgcrochaa), da UFAPE, no período 2024.1. 
@@ -34,17 +34,18 @@ Requisitos Funcionais / Funcionalidades:
 
 ## :books: Documentos
 
-### [História de Usuários](https://docs.google.com/document/d/1-i16qtuT6SRj2m4C9Nv3nBQ4aFyuRS_4MnmMf7GGBt8/edit?usp=sharing)
-### [Descrição do Projeto | MER | Rascunho dos protótipos](https://docs.google.com/document/d/1pOPrBcSiAA3NI0us8a3VZT5xz2uDA2rIdM4e_u2QLuo/edit?usp=sharing)
+### [Estudo de Viabilidade](https://docs.google.com/document/d/1uNlZMtgUhKLh8W3SEM6LUM2YD8OpLJsBkHhWg8HcUEY/edit?usp=sharing)
+### [Plano de Projeto (Histórias de usuário | MER | Protótipo | Arquitetura + Riscos | Milestones)](https://docs.google.com/document/d/1-i16qtuT6SRj2m4C9Nv3nBQ4aFyuRS_4MnmMf7GGBt8/edit?usp=sharing)
 ### [Pitch](https://www.canva.com/design/DAGKmEbC6XA/sP4n-nDbR6zSqpXV_skEDA/edit?utm_content=DAGKmEbC6XA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
-### [Rascunho incial dos Milestones](https://docs.google.com/document/d/1sLK28kE6wJyAq0jMCiW2YMuemoc3-ybGTcyGP_JO618/edit#heading=h.nnslpstl1z8a)
 
 
 ## :hammer_and_wrench: Tecnologias Usadas
-### []()
-### []()
-### []()
-### []()
+### [Flutter](https://flutter.dev/)
+### [Dart](https://dart.dev/)
+### [Firebase Firestore](https://firebase.google.com/docs/firestore?hl=pt-br)
+### [Firebase Authentication](https://firebase.google.com/docs/auth?hl=pt-br)
+### [Firebase Storage](https://firebase.google.com/docs/storage?hl=pt-br)
+### [Firebase Hosting](https://firebase.google.com/docs/hosting?hl=pt-br)
 
 
 ## :book: :scroll: Instruções Gerais
