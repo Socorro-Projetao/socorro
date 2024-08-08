@@ -6,11 +6,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: const FirebaseOptions(
-          apiKey: String.fromEnvironment(('FIREBASE_API_KEY')),
-          projectId: String.fromEnvironment(('FIREBASE_PROJECT_ID')),
-          storageBucket: String.fromEnvironment(('FIREBASE_STORAGE_BUCKET')),
-          messagingSenderId: String.fromEnvironment(('FIREBASE_MESSAGING_SENDER_ID')),
-          appId: String.fromEnvironment(('FIREBASE_APP_ID'))
+          apiKey: 'AIzaSyDqarsP-VJuyon8f0P10KSqB_eKdVA4e_I',
+          projectId: 'socorrobd',
+          storageBucket: 'socorrobd.appspot.com',
+          messagingSenderId: '1038515213564',
+          appId: '1:1038515213564:android:9a50f53ea45293634f7379'
       )
   );
 
