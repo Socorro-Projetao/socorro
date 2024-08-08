@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:socorro/screens/base/base_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyDqarsP-VJuyon8f0P10KSqB_eKdVA4e_I',
+          projectId: 'socorrobd',
+          storageBucket: 'socorrobd.appspot.com',
+          messagingSenderId: '1038515213564',
+          appId: '1:1038515213564:android:9a50f53ea45293634f7379'
+      )
+  );
 
-  //FirebaseFirestore.instance.collection('Teste').add({'Teste': 'teste'});
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
