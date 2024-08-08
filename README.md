@@ -28,15 +28,14 @@ Requisitos Funcionais / Funcionalidades:
 
 ## :iphone: Telas do aplicativo
 
-<img src="https://github.com/user-attachments/assets/23348e2f-c50c-47b6-9240-2d45dd6d6352" alt="Prototipo Socorro (2)" width="75%">
-
+### [Figma](https://www.figma.com/proto/6yTXl701VcMUZ8qurEhb6w/Socorro-!!?node-id=8-2&t=duy3WyQ5r1Y00Ycm-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=8%3A2)
 
 
 ## :books: Documentos
 
 ### [Estudo de Viabilidade](https://docs.google.com/document/d/1uNlZMtgUhKLh8W3SEM6LUM2YD8OpLJsBkHhWg8HcUEY/edit?usp=sharing)
 ### [Plano de Projeto (Histórias de usuário | MER | Protótipo | Arquitetura + Riscos | Milestones)](https://docs.google.com/document/d/1-i16qtuT6SRj2m4C9Nv3nBQ4aFyuRS_4MnmMf7GGBt8/edit?usp=sharing)
-### [Pitch](https://www.canva.com/design/DAGKmEbC6XA/sP4n-nDbR6zSqpXV_skEDA/edit?utm_content=DAGKmEbC6XA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+### [Pitch](https://www.canva.com/design/DAGMnUepapo/5RW3c_1TLA62IoZ2YxxCtQ/view?utm_content=DAGMnUepapo&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
 
 ## :hammer_and_wrench: Tecnologias Usadas
@@ -48,7 +47,9 @@ Requisitos Funcionais / Funcionalidades:
 ### [Firebase Hosting](https://firebase.google.com/docs/hosting?hl=pt-br)
 
 
-## :book: :scroll: Instruções Gerais
+## :link: Acesso a aplicação
+
+### Você pode acessar a aplicação através do seguinte link: [Socorro !!](https://socorrobd.web.app/)
 
 ## :construction: Status do Projeto
 :hammer:Em construção...
