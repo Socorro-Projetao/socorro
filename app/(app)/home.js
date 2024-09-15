@@ -24,7 +24,13 @@ export default function Home() {
         <Text style={styles.buttonText}>Cadastrar outro usuário</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => router.push("pesquisaLocalizacao")} style={styles.button}>
-        <Text style={styles.buttonText}>Pesquisar</Text>
+        <Text style={styles.buttonText}>Pesquisar por localização</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("pesquisaEspecialidade")} style={styles.button}>
+        <Text style={styles.buttonText}>Pesquisar por especialidade</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("pesquisaProfissional")} style={styles.button}>
+        <Text style={styles.buttonText}>Pesquisar por profissional</Text>
       </TouchableOpacity>
     </View>
   )
