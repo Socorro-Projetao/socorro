@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from '../firebaseConfig'
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -123,8 +123,26 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
+    const resetPassword = async (email) => {
+        try {
+            await sendPasswordResetEmail(auth, email);
+            return { success: true, msg: "E-mail de redefinição de senha enviado com sucesso!" };
+        } catch (e) {
+            let msg = e.message;
+
+            // Customizando mensagens de erro
+            if (msg.includes('auth/user-not-found')) msg = "Usuário não encontrado";
+            if (msg.includes('auth/invalid-email')) msg = "E-mail inválido";
+
+            console.error("Erro ao enviar e-mail de redefinição: ", msg);
+
+            return { success: false, msg };
+        }
+    }
+
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, updateUserData }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, updateUserData, resetPassword  }}>
             {children}
         </AuthContext.Provider>
     )

@@ -9,7 +9,7 @@ import { useAuth } from '../context/authContext';
 export default function SignIn() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const {login} = useAuth();
+    const { login, resetPassword } = useAuth();
 
     const emailRef = useRef("");
     const passwordRef = useRef("");
@@ -17,18 +17,26 @@ export default function SignIn() {
     const handleLogin = async () => {
         if (!emailRef.current || !passwordRef.current) {
             Alert.alert('Entrar', 'Por favor preencha todos os campos!');
-            return
+            return;
         }
-
         setLoading(true);
         const response = await login(emailRef.current, passwordRef.current);
         setLoading(false);
-        print( 'Entrar: ', response);
+
         if (response.success) {
             router.push("home");
-        }else{
+        } else {
             Alert.alert('Entrar', response.msg);
         }
+    }
+
+    const handleResetPassword = async () => {
+        if (!emailRef.current) {
+            Alert.alert('Redefinir senha', 'Por favor insira o seu e-mail.');
+            return;
+        }
+        const response = await resetPassword(emailRef.current);
+        Alert.alert('Redefinir senha', response.msg);
     }
     return (
         <CustomKeyboardView>
@@ -50,23 +58,23 @@ export default function SignIn() {
                     />
                 </View>
                 <Text style={styles.textLembrar}>Lembrar-me</Text>
-                <Text style={styles.textSenha}>Esqueci minha senha</Text>
+
+                <TouchableOpacity onPress={handleResetPassword}>
+                    <Text style={styles.textSenha}>Esqueci minha senha</Text>
+                </TouchableOpacity>
 
                 <View style={styles.buttonsContainer}>
                     {
                         loading ? (
-
                             <Loading style={styles.loading} />
-
                         ) : (
                             <View style={styles.button}>
-                                <TouchableOpacity onPress={handleLogin} >
+                                <TouchableOpacity onPress={handleLogin}>
                                     <Text style={styles.buttonText}>Entrar</Text>
                                 </TouchableOpacity>
                             </View>
                         )
                     }
-
 
                     <TouchableOpacity onPress={() => router.push("profileSelection")} style={[styles.button, styles.buttonCadastrar]}>
                         <Text style={styles.buttonText}>Cadastrar-se</Text>
