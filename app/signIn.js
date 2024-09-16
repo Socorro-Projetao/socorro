@@ -57,10 +57,9 @@ export default function SignIn() {
                         style={styles.textInput}
                     />
                 </View>
-                <Text style={styles.textLembrar}>Lembrar-me</Text>
 
                 <TouchableOpacity onPress={handleResetPassword}>
-                    <Text style={styles.textSenha}>Esqueci minha senha</Text>
+                    <Text style={styles.textSenha}>Esqueceu sua senha?</Text>
                 </TouchableOpacity>
 
                 <View style={styles.buttonsContainer}>
@@ -127,10 +126,13 @@ const styles = {
         marginBottom: hp('4%'),
     },
     textSenha: {
-        fontStyle: 'italic',
-        color: '#FFFFFF',
-        fontSize: hp(2),
-        alignItems: 'right',
+        fontSize: hp(1.8),
+        color: '#EFC51B',
+        fontWeight: '600',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end', // Coloca o conteúdo à direita
+        width: wp('80%'),
         marginBottom: hp('4%'),
     },
     buttonsContainer: {
