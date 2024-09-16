@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
+import { areas, services } from './selectOptions';
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -25,11 +26,11 @@ export default function SignUpProfissional() {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
-        
+
         setLoading(true);
         const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedArea, selectedService, experiencia);
         setLoading(false);
-    
+
         if (!response.success) {
             Alert.alert('Cadastro', response.msg);
             return false;
@@ -94,10 +95,7 @@ export default function SignUpProfissional() {
                     <RNPickerSelect
                         onValueChange={(value) => setSelectedArea(value)}
                         placeholder={{ label: "Selecione a área de atuação", value: null }}
-                        items={[
-                            { label: "Construção", value: "construcao" },
-                            { label: "Reparos", value: "reparos" },
-                        ]}
+                        items={areas}
                         style={pickerSelectStyles}
                     />
                 </View>
@@ -107,11 +105,7 @@ export default function SignUpProfissional() {
                     <RNPickerSelect
                         onValueChange={(value) => setSelectedService(value)}
                         placeholder={{ label: "Selecione o serviço", value: null }}
-                        items={[
-                            { label: "Eletricista", value: "eletricista" },
-                            { label: "Encanador", value: "encanador" },
-                            { label: "Pintor", value: "pintor" },
-                        ]}
+                        items={services}
                         style={pickerSelectStyles}
                     />
                 </View>

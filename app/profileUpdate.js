@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../components/Loading';
@@ -8,14 +8,18 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useAuth } from '../context/authContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import RNPickerSelect from 'react-native-picker-select';
+import { areas, services } from './selectOptions';
 
-export default function profileUpdate() {
 
-  const { user, isAuthenticated, updateUserData } = useAuth(); // updateUserData será uma nova função que criaremos
+export default function ProfileUpdate() {
+  const { user, isAuthenticated, updateUserData } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(user?.profilePicture || null);
-
+  const [selectedArea, setSelectedArea] = useState(user?.area || "");
+  const [selectedService, setSelectedService] = useState(user?.service || "");
+  const [experiencia, setExperiencia] = useState(user?.experiencia || "");
   const usernameRef = useRef(user?.username || "");
 
   useEffect(() => {
@@ -25,7 +29,7 @@ export default function profileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current) {
+    if (!usernameRef.current || (user.role === 'profissional' && (!selectedArea || !selectedService || !experiencia))) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
       return false;
     }
@@ -33,21 +37,23 @@ export default function profileUpdate() {
 
     try {
       let docRef;
-      let collection;
 
       // Verifica se o usuário está na coleção 'users' ou 'professionals'
-      if (user.Identificador) {
+      if (user.role === 'profissional') {
         docRef = doc(db, "professionals", user.userId);
-        collection = 'professionals';
       } else {
         docRef = doc(db, "users", user.userId);
-        collection = 'users';
       }
 
       // Atualiza os dados no Firestore
       await updateDoc(docRef, {
         username: usernameRef.current,
-        profilePicture: profileImage || user.profilePicture
+        profilePicture: profileImage || user.profilePicture,
+        ...(user.role === 'profissional' && {
+          area: selectedArea,
+          service: selectedService,
+          experiencia: experiencia
+        })
       });
 
       // Atualiza os dados no AuthContext
@@ -91,7 +97,6 @@ export default function profileUpdate() {
     }
   };
 
-
   return (
     <CustomKeyboardView>
       <View style={styles.container}>
@@ -106,6 +111,41 @@ export default function profileUpdate() {
           />
         </View>
 
+        {user.role === 'profissional' && (
+          <>
+            {/* Selector de área */}
+            <View style={styles.pickerContainer}>
+              <RNPickerSelect
+                onValueChange={(value) => setSelectedArea(value)}
+                placeholder={{ label: "Selecione a área de atuação", value: null }}
+                items={areas}
+                style={pickerSelectStyles}
+                value={selectedArea}
+              />
+            </View>
+
+            {/* Selector de serviço */}
+            <View style={styles.pickerContainer}>
+              <RNPickerSelect
+                onValueChange={(value) => setSelectedService(value)}
+                placeholder={{ label: "Selecione o serviço", value: null }}
+                items={services}
+                style={pickerSelectStyles}
+                value={selectedService}
+              />
+            </View>
+
+            <View style={styles.inputs}>
+              <TextInput
+                defaultValue={user.experiencia}
+                onChangeText={value => setExperiencia(value)}
+                placeholder="Experiência"
+                style={styles.textInput}
+              />
+            </View>
+          </>
+        )}
+
         <TouchableOpacity onPress={pickImage}>
           <View style={styles.imagePicker}>
             {profileImage ? (
@@ -117,97 +157,131 @@ export default function profileUpdate() {
         </TouchableOpacity>
 
         <View style={styles.buttonContainer}>
-          {
-            loading ? (
-              <Loading style={styles.loading} />
-            ) : (
-              <View style={styles.button}>
-                <TouchableOpacity onPress={handlePress}>
-                  <Text style={styles.buttonText}>Atualizar</Text>
-                </TouchableOpacity>
-              </View>
-            )
-          }
+          {loading ? (
+            <Loading style={styles.loading} />
+          ) : (
+            <View style={styles.button}>
+              <TouchableOpacity onPress={handlePress}>
+                <Text style={styles.buttonText}>Atualizar</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-        <TouchableOpacity onPress={() => router.push("profileScreen")} style={[styles.buttonVoltar]}>
+        <TouchableOpacity onPress={() => router.push("profileScreen")} style={styles.buttonVoltar}>
           <Text style={styles.buttonText}>Voltar</Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     </CustomKeyboardView>
-  )
+  );
 }
-
 const styles = {
   container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#0F1626',
-    paddingTop: hp('15%'),
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: '#0F1626',
+      paddingTop: hp('15%'),
   },
   texto: {
-    color: '#FFFFFF',
-    fontSize: hp(3),
-    fontWeight: '600',
-    fontStyle: 'italic',
-    marginBottom: hp('6%'),
+      color: '#FFFFFF',
+      fontSize: hp(3),
+      fontWeight: '600',
+      fontStyle: 'italic',
+      marginBottom: hp('6%'),
   },
   inputs: {
-    width: wp('80%'),
+      width: wp('80%'),
   },
   textInput: {
-    fontStyle: 'italic',
-    width: '100%',
-    padding: hp('2%'),
-    backgroundColor: '#FFFFFF',
-    color: '#000000',
-    borderRadius: 10,
-    marginBottom: hp('3%'),
+      fontStyle: 'italic',
+      width: '100%',
+      padding: hp('2%'),
+      backgroundColor: '#FFFFFF',
+      color: '#000000',
+      borderRadius: 10,
+      marginBottom: hp('3%'),
+  },
+  pickerContainer: {
+      width: wp('80%'),
+      marginBottom: hp('3%'),
   },
   buttonContainer: {
-    width: wp('60%'),
-    alignItems: 'center',
-    marginBottom: hp('4%'),
+      width: wp('60%'),
+      alignItems: 'center',
+      marginBottom: hp('4%'),
   },
   button: {
-    width: '100%',
-    alignItems: 'center',
-    backgroundColor: '#EFC51B',
-    paddingVertical: hp('1.5%'),
-    borderRadius: 10,
-    marginTop: hp('6%'),
-    marginBottom: hp('3%'),
+      width: '100%',
+      alignItems: 'center',
+      backgroundColor: '#EFC51B',
+      paddingVertical: hp('1.5%'),
+      borderRadius: 10,
+      marginBottom: hp('3%'),
   },
   buttonText: {
-    fontSize: hp(2.5),
-    color: '#000000',
+      fontSize: hp(2.5),
+      color: '#000000',
   },
   imagePicker: {
-    width: wp('80%'),
-    height: hp('15%'),
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: hp('3%'),
+      width: wp('80%'),
+      height: hp('15%'),
+      backgroundColor: '#FFFFFF',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 10,
+      marginBottom: hp('3%'),
   },
   imagePickerText: {
-    color: '#000000',
-    fontSize: hp(2),
-    fontWeight: '600',
+      color: '#000000',
+      fontSize: hp(2),
+      fontWeight: '600',
   },
   profileImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 10,
+      width: '100%',
+      height: '100%',
+      borderRadius: 10,
   },
-  loading: {},
-  buttonVoltar: {
-    width: '60%',
-    backgroundColor: '#FFFFFF',
-    marginBottom: hp('3%'),
-    paddingVertical: hp('1.5%'),
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+  bottom: {
+      flexDirection: 'row',
+  },
+  bottomText: {
+      fontSize: hp(1.8),
+      color: '#FFFFFF',
+  },
+  bottomTextSignIn: {
+      fontSize: hp(1.8),
+      color: '#EFC51B',
+      fontWeight: '600',
+  },
+  loading: {
+      // estilos adicionais se necessário
+  },
+};
+
+const pickerSelectStyles = {
+  inputIOS: {
+      fontSize: hp(2),
+      width: '100%',
+      borderWidth: 1,
+      borderColor: 'gray',
+      borderRadius: 10,
+      color: '#000000',
+      backgroundColor: '#FFFFFF',
+      marginBottom: hp('3%'),
+      fontStyle: 'italic',
+  },
+  inputAndroid: {
+      fontSize: hp(2),
+      width: '100%',
+      borderWidth: 1,
+      borderColor: 'gray',
+      borderRadius: 10,
+      color: '#000000',
+      backgroundColor: '#FFFFFF',
+      marginBottom: hp('3%'),
+      fontStyle: 'italic',
+  },
+  placeholder: {
+      fontStyle: 'italic',
+      color: 'gray',
   },
 };
