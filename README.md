@@ -39,8 +39,8 @@ Requisitos Funcionais / Funcionalidades:
 
 
 ## :hammer_and_wrench: Tecnologias Usadas
-### [Flutter](https://flutter.dev/)
-### [Dart](https://dart.dev/)
+### [React Native](https://reactnative.dev)
+### [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
 ### [Firebase Firestore](https://firebase.google.com/docs/firestore?hl=pt-br)
 ### [Firebase Authentication](https://firebase.google.com/docs/auth?hl=pt-br)
 ### [Firebase Storage](https://firebase.google.com/docs/storage?hl=pt-br)
