@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from '../firebaseConfig'
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -11,7 +11,7 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (user) => {
-           // console.log("usuário: ", user)
+            // console.log("usuário: ", user)
             if (user) {
                 setIsAuthenticated(true)
                 setUser(user)
@@ -26,18 +26,37 @@ export const AuthContextProvider = ({ children }) => {
     const updateUserData = async (userId) => {
         let docRef = doc(db, "users", userId);
         let docSnap = await getDoc(docRef);
-    
+
         if (docSnap.exists()) {
             let data = docSnap.data();
-            setUser({ ...user, email: auth.currentUser.email, username: data.username, profilePicture: data.profilePicture, userId: data.userId, area: data.area, service: data.service, experiencia: data.experiencia });
+            setUser({
+                ...user,
+                email: auth.currentUser.email,
+                username: data.username,
+                profilePicture: data.profilePicture,
+                userId: data.userId,
+                area: data.area,
+                service: data.service,
+                experiencia: data.experiencia,
+                role: 'cliente' // Definindo como cliente se encontrado na coleção 'users'
+            });
         } else {
-            // Se não encontrar na coleção 'users', busca na coleção 'professionals'
             docRef = doc(db, "professionals", userId);
             docSnap = await getDoc(docRef);
-    
+
             if (docSnap.exists()) {
                 let data = docSnap.data();
-                setUser({ ...user, email: auth.currentUser.email, username: data.username, profilePicture: data.profilePicture, userId: data.userId, Identificador: data.Identificador, area: data.area, service: data.service, experiencia: data.experiencia });
+                setUser({
+                    ...user,
+                    email: auth.currentUser.email,
+                    username: data.username,
+                    profilePicture: data.profilePicture,
+                    userId: data.userId,
+                    area: data.area,
+                    service: data.service,
+                    experiencia: data.experiencia,
+                    role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
+                });
             } else {
                 //console.error("Usuário não encontrado nas coleções 'users' ou 'professionals'.");
             }
@@ -50,13 +69,13 @@ export const AuthContextProvider = ({ children }) => {
             return { success: true};
         } catch (e) {
             let msg = e.message;
-            
+
             // Mensagens de erro customizadas
             if(msg.includes('auth/invalid-email')) msg = "E-mail inválido";
             if(msg.includes('auth/invalid-credential')) msg = "Credenciais inválidas";
-            
+
             console.error("Erro ao logar usuário: ", msg); // Adiciona logs de erro
-            
+
             return { success: false, msg };
         }
     }
@@ -100,7 +119,7 @@ export const AuthContextProvider = ({ children }) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
-    
+
             await setDoc(doc(db, "professionals", response?.user?.uid), {
                 username,
                 profilePicture: profilePicture || null,
@@ -109,22 +128,40 @@ export const AuthContextProvider = ({ children }) => {
                 service: selectedService,
                 experiencia,
             });
-    
+
             return { success: true, data: response?.user };
         } catch (e) {
             let msg = e.message;
-    
+
             if (msg.includes('auth/invalid-email')) msg = "E-mail inválido";
             if (msg.includes('auth/email-already-in-use')) msg = "E-mail já está em uso";
-    
+
             console.error("Erro ao registrar profissional: ", msg);
-    
+
             return { success: false, msg };
         }
     }
 
+    const resetPassword = async (email) => {
+        try {
+            await sendPasswordResetEmail(auth, email);
+            return { success: true, msg: "E-mail de redefinição de senha enviado com sucesso!" };
+        } catch (e) {
+            let msg = e.message;
+
+            // Customizando mensagens de erro
+            if (msg.includes('auth/user-not-found')) msg = "Usuário não encontrado";
+            if (msg.includes('auth/invalid-email')) msg = "E-mail inválido";
+
+            console.error("Erro ao enviar e-mail de redefinição: ", msg);
+
+            return { success: false, msg };
+        }
+    }
+
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, updateUserData }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, updateUserData, resetPassword  }}>
             {children}
         </AuthContext.Provider>
     )
