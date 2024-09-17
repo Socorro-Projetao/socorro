@@ -7,14 +7,14 @@ import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
-import { areas, services } from './selectOptions';
+import { areas } from './selectOptions';
 
 export default function SignUpProfissional() {
     const router = useRouter();
+
     const [loading, setLoading] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
-    const [selectedArea, setSelectedArea] = useState(null);
-    const [selectedService, setSelectedService] = useState(null);
+    const [selectedEspecialidade, setselectedEspecialidade] = useState(null)
     const [experiencia, setExperiencia] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
@@ -22,13 +22,13 @@ export default function SignUpProfissional() {
     const { registerProfessional } = useAuth();
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedArea || !selectedService || !experiencia) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
 
         setLoading(true);
-        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedArea, selectedService, experiencia);
+        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, experiencia);
         setLoading(false);
 
         if (!response.success) {
@@ -93,19 +93,9 @@ export default function SignUpProfissional() {
                 {/* Selector de área */}
                 <View style={styles.pickerContainer}>
                     <RNPickerSelect
-                        onValueChange={(value) => setSelectedArea(value)}
-                        placeholder={{ label: "Selecione a área de atuação", value: null }}
+                        onValueChange={(value) => setselectedEspecialidade(value)}
+                        placeholder={{ label: "Selecione sua especialidade", value: null }}
                         items={areas}
-                        style={pickerSelectStyles}
-                    />
-                </View>
-
-                {/* Selector de serviço */}
-                <View style={styles.pickerContainer}>
-                    <RNPickerSelect
-                        onValueChange={(value) => setSelectedService(value)}
-                        placeholder={{ label: "Selecione o serviço", value: null }}
-                        items={services}
                         style={pickerSelectStyles}
                     />
                 </View>
@@ -181,7 +171,6 @@ const styles = {
     },
     pickerContainer: {
         width: wp('80%'),
-        marginBottom: hp('3%'),
     },
     buttonContainer: {
         width: wp('60%'),
