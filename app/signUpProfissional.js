@@ -171,7 +171,6 @@ const styles = {
     },
     pickerContainer: {
         width: wp('80%'),
-        marginBottom: hp('3%'),
     },
     buttonContainer: {
         width: wp('60%'),
