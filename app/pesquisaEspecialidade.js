@@ -3,27 +3,13 @@ import React, { useState } from 'react'
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons'
+import { areas } from './selectOptions';
 
 export default function pesquisaEspecialidade() {
   const router = useRouter();
 
   const [search, setSearch] = useState('')
-  const [suggestions, setSuggestions] = useState([
-    'Pintor',
-    'Encanador',
-    'Pedreiro',
-    'Eletricista',
-    'Marceneiro',
-    'Serralheiro',
-    'Gesseiro',
-    'Instalador de ar-condicionado',
-    'Montador de móveis',
-    'Vidraceiro',
-    'Calheiro',
-    'Dedetizador',
-    'Hidrojatista',
-    'Técnico em manutenção de eletrodomésticos'
-  ])
+  const [suggestions, setSuggestions] = useState(areas)
   const [isFocused, setIsFocused] = useState(false);
   const filteredSuggestions = suggestions.filter(item =>
     item.toLowerCase().includes(search.toLowerCase())
