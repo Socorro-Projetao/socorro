@@ -24,7 +24,6 @@ export default function ProfileRead() {
       {/* Verifica o tipo de usuário e exibe informações específicas */}
       {user.role === 'profissional' && (
         <>
-          <Text style={styles.area}>Área de atuação: {user.area}</Text>
           <Text style={styles.service}>Especialidade: {user.service}</Text>
           <Text style={styles.experiencia}>Experiência: {user.experiencia}</Text>
         </>
