@@ -35,8 +35,7 @@ export const AuthContextProvider = ({ children }) => {
                 username: data.username,
                 profilePicture: data.profilePicture,
                 userId: data.userId,
-                area: data.area,
-                service: data.service,
+                especialidade: data.especialidade,
                 experiencia: data.experiencia,
                 role: 'cliente' // Definindo como cliente se encontrado na coleção 'users'
             });
@@ -52,8 +51,7 @@ export const AuthContextProvider = ({ children }) => {
                     username: data.username,
                     profilePicture: data.profilePicture,
                     userId: data.userId,
-                    area: data.area,
-                    service: data.service,
+                    especialidade: data.especialidade,
                     experiencia: data.experiencia,
                     role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
                 });
@@ -115,7 +113,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerProfessional = async (email, password, username, profilePicture, selectedService, experiencia) => {
+    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, experiencia) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
@@ -124,7 +122,7 @@ export const AuthContextProvider = ({ children }) => {
                 username,
                 profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
-                service: selectedService,
+                especialidade: selectedEspecialidade,
                 experiencia
             });
 
