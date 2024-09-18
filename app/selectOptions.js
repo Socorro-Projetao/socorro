@@ -1,5 +1,5 @@
 // selectOptions.js
-export const areas = [
+export const especialidades = [
     {label: 'Pintor', value: 'Pintor'},
     {label: 'Encanador', value: 'Encanador'},
     {label: 'Pedreiro', value: 'Pedreiro'},
