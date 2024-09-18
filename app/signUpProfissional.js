@@ -8,6 +8,7 @@ import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
+import { sexoOpcoes } from './selectSexOptions';
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -26,7 +27,7 @@ export default function SignUpProfissional() {
     const { registerProfessional } = useAuth();
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
@@ -92,11 +93,7 @@ export default function SignUpProfissional() {
                         placeholder="Senha"
                         style={styles.textInput}
                     />
-                    <TextInput
-                        onChangeText={value => setSexo(value)}
-                        placeholder="Sexo"
-                        style={styles.textInput}
-                    />
+
                     <TextInput
                         onChangeText={value => setTelefone(value)}
                         placeholder="Telefone"
@@ -111,6 +108,16 @@ export default function SignUpProfissional() {
                         onChangeText={value => setLocalizacao(value)}
                         placeholder="Localização"
                         style={styles.textInput}
+                    />
+                </View>
+
+                {/* Selector de sexo */}
+                <View style={styles.pickerContainer}>
+                    <RNPickerSelect
+                        onValueChange={(value) => setSexo(value)}
+                        placeholder={{ label: "Selecione seu sexo", value: null }}
+                        items={sexoOpcoes}
+                        style={pickerSelectStyles}
                     />
                 </View>
 
