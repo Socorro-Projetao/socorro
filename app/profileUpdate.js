@@ -9,7 +9,7 @@ import { useAuth } from '../context/authContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
-import { areas } from './selectOptions';
+import { especialidades } from './selectOptions';
 
 
 export default function ProfileUpdate() {
@@ -17,7 +17,7 @@ export default function ProfileUpdate() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(user?.profilePicture || null);
-  const [selectedService, setSelectedService] = useState(user?.service || "");
+  const [selectedEspecialidade, setSelectedEspecialidade] = useState(user?.especialidade || "");
   const [experiencia, setExperiencia] = useState(user?.experiencia || "");
   const usernameRef = useRef(user?.username || "");
 
@@ -28,7 +28,7 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || (user.role === 'profissional' && (!selectedService || !experiencia))) {
+    if (!usernameRef.current || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia))) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
       return false;
     }
@@ -49,7 +49,7 @@ export default function ProfileUpdate() {
         username: usernameRef.current,
         profilePicture: profileImage || user.profilePicture,
         ...(user.role === 'profissional' && {
-          service: selectedService,
+          especialidade: selectedEspecialidade,
           experiencia: experiencia
         })
       });
@@ -112,14 +112,14 @@ export default function ProfileUpdate() {
         {user.role === 'profissional' && (
           <>
 
-            {/* Selector de serviço */}
+            {/* Selector de especialidade */}
             <View style={styles.pickerContainer}>
               <RNPickerSelect
-                onValueChange={(value) => setSelectedService(value)}
+                onValueChange={(value) => setSelectedEspecialidade(value)}
                 placeholder={{ label: "Selecione sua especialidade", value: null }}
-                items={areas}
+                items={especialidades}
                 style={pickerSelectStyles}
-                value={selectedService}
+                value={selectedEspecialidade}
               />
             </View>
 
@@ -144,20 +144,21 @@ export default function ProfileUpdate() {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.buttonContainer}>
+        <View>
           {loading ? (
             <Loading style={styles.loading} />
           ) : (
             <View style={styles.button}>
-              <TouchableOpacity onPress={handlePress}>
+              <TouchableOpacity onPress={() => router.push("profileScreen")} style={styles.buttonVoltar}>
+                <Text style={styles.buttonText}>Voltar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handlePress} style={styles.buttonAtualizar}>
                 <Text style={styles.buttonText}>Atualizar</Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
-        <TouchableOpacity onPress={() => router.push("profileScreen")} style={styles.buttonVoltar}>
-          <Text style={styles.buttonText}>Voltar</Text>
-        </TouchableOpacity>
+        
       </View>
     </CustomKeyboardView>
   );
@@ -190,20 +191,28 @@ const styles = {
   },
   pickerContainer: {
       width: wp('80%'),
-      marginBottom: hp('3%'),
   },
-  buttonContainer: {
-      width: wp('60%'),
-      alignItems: 'center',
-      marginBottom: hp('4%'),
+  buttonAtualizar: {
+    width: '50%',
+    backgroundColor: '#EFC51B',
+    paddingVertical: hp('1.5%'),
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonVoltar: {
+    width: '50%',
+    backgroundColor: '#D9D9D9',
+    paddingVertical: hp('1.5%'),
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: wp('8%'),
   },
   button: {
-      width: '100%',
-      alignItems: 'center',
-      backgroundColor: '#EFC51B',
-      paddingVertical: hp('1.5%'),
-      borderRadius: 10,
-      marginBottom: hp('3%'),
+      flexDirection: 'row', 
+      justifyContent: 'space-around', 
+      width: '80%',
   },
   buttonText: {
       fontSize: hp(2.5),
@@ -227,18 +236,6 @@ const styles = {
       width: '100%',
       height: '100%',
       borderRadius: 10,
-  },
-  bottom: {
-      flexDirection: 'row',
-  },
-  bottomText: {
-      fontSize: hp(1.8),
-      color: '#FFFFFF',
-  },
-  bottomTextSignIn: {
-      fontSize: hp(1.8),
-      color: '#EFC51B',
-      fontWeight: '600',
   },
   loading: {
       // estilos adicionais se necessário
