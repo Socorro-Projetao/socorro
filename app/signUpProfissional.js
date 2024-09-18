@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
-import { areas } from './selectOptions';
+import { especialidades } from './selectOptions';
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -95,7 +95,7 @@ export default function SignUpProfissional() {
                     <RNPickerSelect
                         onValueChange={(value) => setselectedEspecialidade(value)}
                         placeholder={{ label: "Selecione sua especialidade", value: null }}
-                        items={areas}
+                        items={especialidades}
                         style={pickerSelectStyles}
                     />
                 </View>

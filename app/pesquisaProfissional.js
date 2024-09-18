@@ -21,18 +21,17 @@ export default function pesquisaProfissional() {
   const fetchProfessionals = async (searchTerm) => {
     if (searchTerm.length === 0){
       setSuggestions([])
+      return
     }
 
-    const q = query (
-      collection(db, 'professionals'),
-      where('username', '>=', searchTerm),
-      where('username', '<=', searchTerm + '\uf8ff')
-    )
+    const q = query(collection(db, 'professionals'))
 
     const querySnapshot = await getDocs(q)
     const professionalsList = querySnapshot.docs.map((doc) => doc.data().username)
 
-    setSuggestions(professionalsList)
+    const filteredList = professionalsList.filter((username) => username.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    setSuggestions(filteredList)
   }
 
 

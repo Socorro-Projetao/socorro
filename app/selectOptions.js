@@ -1,19 +1,19 @@
 // selectOptions.js
-export const areas = [
-    {label: 'Pintor', value: 'pintor'},
-    {label: 'Encanador', value: 'encanador'},
-    {label: 'Pedreiro', value: 'pedreiro'},
-    {label: 'Eletricista', value: 'eletricista'},
-    {label: 'Marceneiro', value: 'marceneiro'},
-    {label: 'Serralheiro', value: 'serralheiro'},
-    {label: 'Gesseiro', value: 'gesseiro'},
-    {label: 'Instalador de ar-condicionado', value: 'instalador de ar-condicionado'},
-    {label: 'Montador de móveis', value: 'montador de móveis'},
-    {label: 'Vidraceiro', value: 'vidraceiro'},
-    {label: 'Calheiro', value: 'calheiro'},
-    {label: 'Dedetizador', value: 'dedetizador'},
-    {label: 'Hidrojatista', value: 'hidrojatista'},
-    {label: 'Técnico em manutenção de eletrodomésticos', value: 'técnico em manutenção de eletrodomésticos'},
-    {label: 'Outro', value: 'outro'}
+export const especialidades = [
+    {label: 'Pintor', value: 'Pintor'},
+    {label: 'Encanador', value: 'Encanador'},
+    {label: 'Pedreiro', value: 'Pedreiro'},
+    {label: 'Eletricista', value: 'Eletricista'},
+    {label: 'Marceneiro', value: 'Marceneiro'},
+    {label: 'Serralheiro', value: 'Serralheiro'},
+    {label: 'Gesseiro', value: 'Gesseiro'},
+    {label: 'Instalador de ar-condicionado', value: 'Instalador de ar-condicionado'},
+    {label: 'Montador de móveis', value: 'Montador de móveis'},
+    {label: 'Vidraceiro', value: 'Vidraceiro'},
+    {label: 'Calheiro', value: 'Calheiro'},
+    {label: 'Dedetizador', value: 'Dedetizador'},
+    {label: 'Hidrojatista', value: 'Hidrojatista'},
+    {label: 'Técnico em manutenção de eletrodomésticos', value: 'Técnico em manutenção de eletrodomésticos'},
+    {label: 'Outro', value: 'Outro'}
 ];
 

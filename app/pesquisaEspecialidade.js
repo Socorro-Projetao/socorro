@@ -12,7 +12,7 @@ export default function pesquisaEspecialidade() {
   const [suggestions, setSuggestions] = useState(areas)
   const [isFocused, setIsFocused] = useState(false);
   const filteredSuggestions = suggestions.filter(item =>
-    item.toLowerCase().includes(search.toLowerCase())
+    item.label.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -60,7 +60,7 @@ export default function pesquisaEspecialidade() {
           data={filteredSuggestions}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.suggestionItem}>
-              <Text style={styles.suggestionText}>{item}</Text>
+              <Text style={styles.suggestionText}>{item.label}</Text>
             </TouchableOpacity>
           )}
           keyExtractor={(item, index) => index.toString()}
