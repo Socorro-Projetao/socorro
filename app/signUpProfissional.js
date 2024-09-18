@@ -16,6 +16,10 @@ export default function SignUpProfissional() {
     const [profileImage, setProfileImage] = useState(null);
     const [selectedEspecialidade, setselectedEspecialidade] = useState(null)
     const [experiencia, setExperiencia] = useState(null);
+    const [sexo, setSexo] = useState(null);
+    const [telefone, setTelefone] = useState(null);
+    const [redeSocial, setRedeSocial] = useState(null);
+    const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
     const passwordRef = useRef("");
@@ -28,7 +32,7 @@ export default function SignUpProfissional() {
         }
 
         setLoading(true);
-        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, experiencia);
+        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, sexo, telefone, redeSocial, experiencia, localizacao);
         setLoading(false);
 
         if (!response.success) {
@@ -86,6 +90,26 @@ export default function SignUpProfissional() {
                         onChangeText={value => passwordRef.current = value}
                         secureTextEntry
                         placeholder="Senha"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setSexo(value)}
+                        placeholder="Sexo"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setTelefone(value)}
+                        placeholder="Telefone"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setRedeSocial(value)}
+                        placeholder="Rede social"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setLocalizacao(value)}
+                        placeholder="Localização"
                         style={styles.textInput}
                     />
                 </View>

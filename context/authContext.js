@@ -113,7 +113,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, experiencia) => {
+    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, sexo, telefone, redeSocial, experiencia, localizacao) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
@@ -123,7 +123,11 @@ export const AuthContextProvider = ({ children }) => {
                 profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
                 especialidade: selectedEspecialidade,
-                experiencia
+                experiencia,
+                sexo,
+                telefone,
+                redeSocial,
+                localizacao
             });
 
             return { success: true, data: response?.user };
