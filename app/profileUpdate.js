@@ -9,7 +9,7 @@ import { useAuth } from '../context/authContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
-import { areas, services } from './selectOptions';
+import { areas } from './selectOptions';
 
 
 export default function ProfileUpdate() {
@@ -17,7 +17,6 @@ export default function ProfileUpdate() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(user?.profilePicture || null);
-  const [selectedArea, setSelectedArea] = useState(user?.area || "");
   const [selectedService, setSelectedService] = useState(user?.service || "");
   const [experiencia, setExperiencia] = useState(user?.experiencia || "");
   const usernameRef = useRef(user?.username || "");
@@ -29,7 +28,7 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || (user.role === 'profissional' && (!selectedArea || !selectedService || !experiencia))) {
+    if (!usernameRef.current || (user.role === 'profissional' && (!selectedService || !experiencia))) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
       return false;
     }
@@ -50,7 +49,6 @@ export default function ProfileUpdate() {
         username: usernameRef.current,
         profilePicture: profileImage || user.profilePicture,
         ...(user.role === 'profissional' && {
-          area: selectedArea,
           service: selectedService,
           experiencia: experiencia
         })
@@ -113,23 +111,13 @@ export default function ProfileUpdate() {
 
         {user.role === 'profissional' && (
           <>
-            {/* Selector de área */}
-            <View style={styles.pickerContainer}>
-              <RNPickerSelect
-                onValueChange={(value) => setSelectedArea(value)}
-                placeholder={{ label: "Selecione a área de atuação", value: null }}
-                items={areas}
-                style={pickerSelectStyles}
-                value={selectedArea}
-              />
-            </View>
 
             {/* Selector de serviço */}
             <View style={styles.pickerContainer}>
               <RNPickerSelect
                 onValueChange={(value) => setSelectedService(value)}
-                placeholder={{ label: "Selecione o serviço", value: null }}
-                items={services}
+                placeholder={{ label: "Selecione sua especialidade", value: null }}
+                items={areas}
                 style={pickerSelectStyles}
                 value={selectedService}
               />
