@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Drawer } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, ScrollView  } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+
+
 
 
 
 const data = [
   // Dados fictícios para os cards
-  { id: 1, name: 'João Silva', role: 'Desenvolvedor', image: require('../../assets/images/perfil.png') },
-  { id: 2, name: 'Maria Oliveira', role: 'Designer', image: require('../../assets/images/perfil.png')},
-  { id: 3, name: 'Sandro Ferreira', role: 'Programador', image: require('../../assets/images/perfil.png') },
-  { id: 4, name: 'Pedro Lima', role: 'Engenheiro', image: require('../../assets/images/perfil.png') },
-  { id: 5, name: 'Ana Souza', role: 'Cientista', image: require('../../assets/images/perfil.png') },
+  { id: 1, name: 'João Silva', role: 'Desenvolvedor', image: require('../../assets/images/icon_perfil.png') },
+  { id: 2, name: 'Maria Oliveira', role: 'Designer', image: require('../../assets/images/icon_perfil.png')},
+  { id: 3, name: 'Sandro Ferreira', role: 'Programador', image: require('../../assets/images/icon_perfil.png') },
+  { id: 4, name: 'Pedro Lima', role: 'Engenheiro', image: require('../../assets/images/icon_perfil.png') },
+  { id: 5, name: 'Ana Souza', role: 'Cientista', image: require('../../assets/images/icon_perfil.png') },
   // ... outros dados
 ];
 
@@ -49,10 +53,11 @@ const Home = () => {
   }, []);
 
   return (
+    
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="menu" size={30} color="black" style={styles.menuIcon} />
-        <Ionicons name="search" size={30} color="black" style={styles.searchIcon} />
+        <Ionicons name="menu" size={25} color='#0F1626' style={styles.menuIcon} />
+        <AntDesign name='search1' size={25} color='#0F1626' style={styles.searchIcon} />
       </View>
       <ScrollView Style={styles.container}>
       <Text style={styles.title}>Últimos Contratados</Text>
@@ -168,8 +173,8 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     position: 'absolute',
-    right: 20,
-    bottom: 3,
+    right: wp(2),
+    bottom: 5,
 
 
   },
