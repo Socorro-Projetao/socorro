@@ -23,7 +23,7 @@ export default function ProfileUpdate() {
   const usernameRef = useRef(user?.username || "");
   const [sexo, setSexo] = useState(user?.sexo || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
-  const [redeSocial, setRedeSocial] = useState(user?.redeSocial || "");
+  const [instagram, setinstagram] = useState(user?.instagram || "");
   const [localizacao, setLocalizacao] = useState(user?.localizacao || "");
 
 
@@ -34,7 +34,7 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !redeSocial || !localizacao))) {
+    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !instagram || !localizacao))) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
       return false;
     }
@@ -59,7 +59,7 @@ export default function ProfileUpdate() {
           especialidade: selectedEspecialidade,
           experiencia: experiencia,
           sexo: sexo,
-          redeSocial: redeSocial,
+          instagram: instagram,
           localizacao: localizacao
         })
       });
@@ -128,12 +128,12 @@ export default function ProfileUpdate() {
         {user.role === 'profissional' && (
           <>
 
-            {/* Rede social */}
+            {/* Instagram */}
             <View style={styles.inputs}>
               <TextInput
-                defaultValue={user.redeSocial}
-                onChangeText={value => setRedeSocial(value)}
-                placeholder="Rede social"
+                defaultValue={user.instagram}
+                onChangeText={value => setinstagram(value)}
+                placeholder="Instagram"
                 style={styles.textInput}
               />
             </View>

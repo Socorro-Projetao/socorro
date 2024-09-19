@@ -56,7 +56,7 @@ export const AuthContextProvider = ({ children }) => {
                     experiencia: data.experiencia,
                     sexo: data.sexo,
                     telefone: data.telefone,
-                    redeSocial: data.redeSocial,
+                    instagram: data.instagram,
                     localizacao: data.localizacao,
                     role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
                 });
@@ -119,7 +119,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, sexo, telefone, redeSocial, experiencia, localizacao) => {
+    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, sexo, telefone, instagram, experiencia, localizacao) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
@@ -132,7 +132,7 @@ export const AuthContextProvider = ({ children }) => {
                 experiencia,
                 sexo,
                 telefone,
-                redeSocial,
+                instagram,
                 localizacao
             });
 
