@@ -37,6 +37,7 @@ export const AuthContextProvider = ({ children }) => {
                 userId: data.userId,
                 especialidade: data.especialidade,
                 experiencia: data.experiencia,
+                telefone: data.telefone,
                 role: 'cliente' // Definindo como cliente se encontrado na coleção 'users'
             });
         } else {
