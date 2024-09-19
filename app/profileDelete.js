@@ -4,13 +4,13 @@ import { useAuth } from '../context/authContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 import { getAuth, deleteUser } from 'firebase/auth';
-import { getFirestore, doc, deleteDoc } from 'firebase/firestore'; // Importe se usar o Firestore
+import { getFirestore, doc, deleteDoc, getDoc } from 'firebase/firestore'; // Adicionei getDoc
 
 export default function ProfileDelete() {
   const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const auth = getAuth();
-  const db = getFirestore(); 
+  const db = getFirestore();
 
   if (isAuthenticated === undefined) {
     return <Text>Carregando...</Text>;
@@ -33,27 +33,36 @@ export default function ProfileDelete() {
           text: 'Excluir',
           onPress: async () => {
             try {
+              const auth = getAuth();
+              const db = getFirestore();
               const userToDelete = auth.currentUser;
               if (userToDelete) {
-                // 1. Exclui o usuário do Firebase Authentication
+                const userId = userToDelete.uid; // UID está correto
+
+                // 1. Excluir o documento do usuário da coleção 'users'
+                const userDocRef = doc(db, 'users', userId);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                  await deleteDoc(userDocRef);
+                } else {
+                  // 2. Excluir o documento do usuário da coleção 'professionals' se não estiver na coleção 'users'
+                  const professionalDocRef = doc(db, 'professionals', userId);
+                  const professionalDoc = await getDoc(professionalDocRef);
+
+                  if (professionalDoc.exists()) {
+                    await deleteDoc(professionalDocRef);
+                  } else {
+                    console.log('Usuário não encontrado em nenhuma coleção.');
+                    throw new Error('Usuário não encontrado nas coleções.');
+                  }
+                }
+
+                // 3. Excluir o usuário do Firebase Authentication
                 await deleteUser(userToDelete);
-                
-                // 2. Exclui outros dados do usuário 
-                if (db) { // Verifica se o Firestore está sendo usado
-                  const userDocRef = doc(db, 'users', user.userId); 
-                  let userDoc = await getDoc(userDocRef);
-                  if (userDoc.exists()){
-                    await deleteDoc(userDocRef);
-                  }else{
-                    await deleteDoc(doc(db, 'professionals', user.userId));
-                }
-                }
-                // Adicione a lógica para excluir dados de outras coleções, se necessário
 
-                // 3. Faça logout do usuário
+                // 4. Fazer logout e redirecionar para a tela de login
                 logout();
-
-                // 4. Redirecione para a tela de login
                 router.push('/signIn');
               }
             } catch (error) {
@@ -109,14 +118,63 @@ export default function ProfileDelete() {
 }
 
 const styles = StyleSheet.create({
-  // ... (estilos existentes) ...
-
-  buttonExcluir: {
-    width: '50%',
-    backgroundColor: 'red', // Cor vermelha para indicar ação destrutiva
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  profilePicture: {
+    width: wp('30%'),
+    height: wp('30%'),
+    borderRadius: wp('15%'),
+    marginBottom: hp('2%'),
+  },
+  infoContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: hp('2%'),
+  },
+  label: {
+    fontSize: hp('2%'),
+    marginBottom: hp('1%'),
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: hp('2%'),
+  },
+  buttonVoltar: {
+    width: '30%',
+    backgroundColor: '#888',
     paddingVertical: hp('1.5%'),
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonEditar: {
+    width: '30%',
+    backgroundColor: '#4CAF50',
+    paddingVertical: hp('1.5%'),
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonExcluir: {
+    width: '30%',
+    backgroundColor: 'red',
+    paddingVertical: hp('1.5%'),
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: hp('2%'),
   },
 });
