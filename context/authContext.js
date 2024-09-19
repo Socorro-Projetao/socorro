@@ -53,6 +53,10 @@ export const AuthContextProvider = ({ children }) => {
                     userId: data.userId,
                     especialidade: data.especialidade,
                     experiencia: data.experiencia,
+                    sexo: data.sexo,
+                    telefone: data.telefone,
+                    redeSocial: data.redeSocial,
+                    localizacao: data.localizacao,
                     role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
                 });
             } else {
