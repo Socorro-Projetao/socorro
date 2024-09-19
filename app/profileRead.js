@@ -29,6 +29,10 @@ export default function ProfileRead() {
         <Text style={styles.label}>
           <Text style={styles.bold}>E-mail: </Text>{user.email}
         </Text>
+        <Text style={styles.label}>
+          <Text style={styles.bold}>Telefone: </Text>{user.telefone}
+        </Text>
+        
         
         {/* Verifica o tipo de usuário e exibe informações específicas */}
         {user.role === 'profissional' && (
@@ -38,6 +42,15 @@ export default function ProfileRead() {
             </Text>
             <Text style={styles.label}>
               <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Sexo: </Text>{user.sexo}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Rede Social: </Text>{user.redeSocial}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Localização: </Text>{user.localizacao}
             </Text>
           </>
         )}

@@ -8,6 +8,7 @@ import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
+import { sexoOpcoes } from './selectSexOptions';
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -16,19 +17,23 @@ export default function SignUpProfissional() {
     const [profileImage, setProfileImage] = useState(null);
     const [selectedEspecialidade, setselectedEspecialidade] = useState(null)
     const [experiencia, setExperiencia] = useState(null);
+    const [sexo, setSexo] = useState(null);
+    const [telefone, setTelefone] = useState(null);
+    const [redeSocial, setRedeSocial] = useState(null);
+    const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
     const passwordRef = useRef("");
     const { registerProfessional } = useAuth();
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !redeSocial || !localizacao) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
 
         setLoading(true);
-        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, experiencia);
+        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, sexo, telefone, redeSocial, experiencia, localizacao);
         setLoading(false);
 
         if (!response.success) {
@@ -87,6 +92,32 @@ export default function SignUpProfissional() {
                         secureTextEntry
                         placeholder="Senha"
                         style={styles.textInput}
+                    />
+
+                    <TextInput
+                        onChangeText={value => setTelefone(value)}
+                        placeholder="Telefone"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setRedeSocial(value)}
+                        placeholder="Rede social"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setLocalizacao(value)}
+                        placeholder="Localização"
+                        style={styles.textInput}
+                    />
+                </View>
+
+                {/* Selector de sexo */}
+                <View style={styles.pickerContainer}>
+                    <RNPickerSelect
+                        onValueChange={(value) => setSexo(value)}
+                        placeholder={{ label: "Selecione seu sexo", value: null }}
+                        items={sexoOpcoes}
+                        style={pickerSelectStyles}
                     />
                 </View>
 

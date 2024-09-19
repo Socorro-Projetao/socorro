@@ -37,6 +37,7 @@ export const AuthContextProvider = ({ children }) => {
                 userId: data.userId,
                 especialidade: data.especialidade,
                 experiencia: data.experiencia,
+                telefone: data.telefone,
                 role: 'cliente' // Definindo como cliente se encontrado na coleção 'users'
             });
         } else {
@@ -53,6 +54,10 @@ export const AuthContextProvider = ({ children }) => {
                     userId: data.userId,
                     especialidade: data.especialidade,
                     experiencia: data.experiencia,
+                    sexo: data.sexo,
+                    telefone: data.telefone,
+                    redeSocial: data.redeSocial,
+                    localizacao: data.localizacao,
                     role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
                 });
             } else {
@@ -87,7 +92,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const register = async (email, password, username, profilePicture) => {
+    const register = async (email, password, username, profilePicture, telefone) => {
         try {
             // Cria o usuário com e-mail e senha
             const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -97,7 +102,8 @@ export const AuthContextProvider = ({ children }) => {
             await setDoc(doc(db, "users", response?.user?.uid), {
                 username,
                 profilePicture: profilePicture || null,
-                userId: response?.user?.uid
+                userId: response?.user?.uid,
+                telefone
             });
             
             return { success: true, data: response?.user };
@@ -113,7 +119,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, experiencia) => {
+    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, sexo, telefone, redeSocial, experiencia, localizacao) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
@@ -123,7 +129,11 @@ export const AuthContextProvider = ({ children }) => {
                 profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
                 especialidade: selectedEspecialidade,
-                experiencia
+                experiencia,
+                sexo,
+                telefone,
+                redeSocial,
+                localizacao
             });
 
             return { success: true, data: response?.user };
