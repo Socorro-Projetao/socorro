@@ -13,20 +13,21 @@ export default function SignUpCliente() {
     const {register} = useAuth();
     const [loading, setLoading] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
+    const [telefone, setTelefone] = useState(null);
 
     const usernameRef = useRef("");
     const emailRef = useRef("");
     const passwordRef = useRef("");
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !telefone) {
           //não é necessário inserir imagem de perfil no ato do cadastro
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false
         }
         setLoading(true)
         
-        let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileImage)
+        let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileImage, telefone)
         setLoading(false)
 
         //console.log('resultado: ', response)
@@ -83,6 +84,11 @@ export default function SignUpCliente() {
                 <TextInput
                     onChangeText={value => emailRef.current = value}
                     placeholder="E-mail"
+                    style={styles.textInput}
+                />
+                <TextInput
+                    onChangeText={value => setTelefone(value)}
+                    placeholder="Telefone"
                     style={styles.textInput}
                 />
                 <TextInput
