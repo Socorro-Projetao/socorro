@@ -19,7 +19,7 @@ export default function SignUpProfissional() {
     const [experiencia, setExperiencia] = useState(null);
     const [sexo, setSexo] = useState(null);
     const [telefone, setTelefone] = useState(null);
-    const [redeSocial, setRedeSocial] = useState(null);
+    const [instagram, setinstagram] = useState(null);
     const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
@@ -27,13 +27,13 @@ export default function SignUpProfissional() {
     const { registerProfessional } = useAuth();
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !redeSocial || !localizacao) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
 
         setLoading(true);
-        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, sexo, telefone, redeSocial, experiencia, localizacao);
+        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, sexo, telefone, instagram, experiencia, localizacao);
         setLoading(false);
 
         if (!response.success) {
@@ -100,8 +100,8 @@ export default function SignUpProfissional() {
                         style={styles.textInput}
                     />
                     <TextInput
-                        onChangeText={value => setRedeSocial(value)}
-                        placeholder="Rede social"
+                        onChangeText={value => setinstagram(value)}
+                        placeholder="Instagram"
                         style={styles.textInput}
                     />
                     <TextInput

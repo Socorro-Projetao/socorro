@@ -47,7 +47,7 @@ export default function ProfileRead() {
               <Text style={styles.bold}>Sexo: </Text>{user.sexo}
             </Text>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Rede Social: </Text>{user.redeSocial}
+              <Text style={styles.bold}>Instagram: </Text>{user.instagram}
             </Text>
             <Text style={styles.label}>
               <Text style={styles.bold}>Localização: </Text>{user.localizacao}
