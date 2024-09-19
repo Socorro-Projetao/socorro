@@ -27,7 +27,7 @@ export default function SignUpProfissional() {
     const { registerProfessional } = useAuth();
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !redeSocial || !localizacao) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
