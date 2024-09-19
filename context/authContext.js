@@ -91,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const register = async (email, password, username, profilePicture) => {
+    const register = async (email, password, username, profilePicture, telefone) => {
         try {
             // Cria o usuário com e-mail e senha
             const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -101,7 +101,8 @@ export const AuthContextProvider = ({ children }) => {
             await setDoc(doc(db, "users", response?.user?.uid), {
                 username,
                 profilePicture: profilePicture || null,
-                userId: response?.user?.uid
+                userId: response?.user?.uid,
+                telefone
             });
             
             return { success: true, data: response?.user };
