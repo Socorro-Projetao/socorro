@@ -10,6 +10,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
+import { sexoOpcoes } from './selectSexOptions';
 
 
 export default function ProfileUpdate() {
@@ -20,6 +21,11 @@ export default function ProfileUpdate() {
   const [selectedEspecialidade, setSelectedEspecialidade] = useState(user?.especialidade || "");
   const [experiencia, setExperiencia] = useState(user?.experiencia || "");
   const usernameRef = useRef(user?.username || "");
+  const [sexo, setSexo] = useState(user?.sexo || "");
+  const [telefone, setTelefone] = useState(user?.telefone || "");
+  const [redeSocial, setRedeSocial] = useState(user?.redeSocial || "");
+  const [localizacao, setLocalizacao] = useState(user?.localizacao || "");
+
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -28,7 +34,7 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia))) {
+    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !redeSocial || !localizacao))) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
       return false;
     }
@@ -48,9 +54,13 @@ export default function ProfileUpdate() {
       await updateDoc(docRef, {
         username: usernameRef.current,
         profilePicture: profileImage || user.profilePicture,
+        telefone: telefone,
         ...(user.role === 'profissional' && {
           especialidade: selectedEspecialidade,
-          experiencia: experiencia
+          experiencia: experiencia,
+          sexo: sexo,
+          redeSocial: redeSocial,
+          localizacao: localizacao
         })
       });
 
@@ -107,10 +117,47 @@ export default function ProfileUpdate() {
             placeholder="Nome do usuário"
             style={styles.textInput}
           />
+          <TextInput
+            defaultValue={user.telefone}
+            onChangeText={value => setTelefone(value)}
+            placeholder="Telefone"
+            style={styles.textInput}
+          />
         </View>
 
         {user.role === 'profissional' && (
           <>
+
+            {/* Rede social */}
+            <View style={styles.inputs}>
+              <TextInput
+                defaultValue={user.redeSocial}
+                onChangeText={value => setRedeSocial(value)}
+                placeholder="Rede social"
+                style={styles.textInput}
+              />
+            </View>
+
+            {/* Localização */}
+            <View style={styles.inputs}>
+              <TextInput
+                defaultValue={user.localizacao}
+                onChangeText={value => setLocalizacao(value)}
+                placeholder="Localização"
+                style={styles.textInput}
+              />
+            </View>
+
+            {/* Selector de sexo */}
+            <View style={styles.pickerContainer}>
+              <RNPickerSelect
+                onValueChange={(value) => setSexo(value)}
+                placeholder={{ label: "Selecione seu sexo", value: null }}
+                items={sexoOpcoes}
+                style={pickerSelectStyles}
+                value={sexo}
+              />
+            </View>
 
             {/* Selector de especialidade */}
             <View style={styles.pickerContainer}>
