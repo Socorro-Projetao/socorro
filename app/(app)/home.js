@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, ScrollView }
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { useRouter } from 'expo-router';
 
 const data = [
   // Dados fictícios para os cards
@@ -35,7 +36,7 @@ const Anuncio = ({ texto }) => (
 );
 
 const Home = () => {
-
+  const router = useRouter();
 
   // Garante a aleatoriedade dos anuncios
   const [randomAnuncio, setRandomAnuncio] = useState([]);
@@ -49,8 +50,19 @@ const Home = () => {
 
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="menu" size={25} color='#0F1626' style={styles.menuIcon} />
-        <AntDesign name='search1' size={25} color='#0F1626' style={styles.searchIcon} />
+        <Ionicons
+          name="menu"
+          size={25}
+          color='#0F1626'
+          style={styles.menuIcon}
+        />
+        <AntDesign
+          name='search1'
+          size={25}
+          color='#0F1626'
+          style={styles.searchIcon}
+          onPress={() => router.push("opcoesPesquisa")}
+        />
       </View>
       <ScrollView Style={styles.container}>
         <Text style={styles.title}>Últimos Contratados</Text>
