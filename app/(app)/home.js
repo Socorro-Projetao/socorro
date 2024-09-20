@@ -92,12 +92,12 @@ const Home = () => {
 
     <View style={styles.container}>
       <View style={styles.header}>
-        <Ionicons
+        {/* <Ionicons
           name="menu"
           size={25}
           color='#0F1626'
           style={styles.menuIcon}
-        />
+        /> */}
         <AntDesign
           name='search1'
           size={25}
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: '#fff',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 10,
   },
