@@ -16,8 +16,6 @@ export default function ProfileRead() {
     return <Text>Usuário não logado</Text>;
   }
 
-  // Converter timestamp para data
-  const dataNascimento = new Date(user.dataNascimento.seconds * 1000);
 
   return (
     <View style={styles.container}>
