@@ -3,14 +3,15 @@ import React, { useState } from 'react'
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons'
-import { areas } from './selectOptions';
+import { especialidades } from './selectOptions';
 
 export default function pesquisaEspecialidade() {
   const router = useRouter();
 
   const [search, setSearch] = useState('')
-  const [suggestions, setSuggestions] = useState(areas)
+  const [suggestions, setSuggestions] = useState(especialidades)
   const [isFocused, setIsFocused] = useState(false);
+
   const filteredSuggestions = suggestions.filter(item =>
     item.label.toLowerCase().includes(search.toLowerCase())
   );
@@ -22,7 +23,7 @@ export default function pesquisaEspecialidade() {
           name='arrowleft' 
           size={25} 
           color='#0F1626' 
-          onPress={() => router.push("home")} 
+          onPress={() => router.push("opcoesPesquisa")} 
           style={styles.iconLeft} 
         />
         <TextInput
