@@ -16,6 +16,9 @@ export default function ProfileRead() {
     return <Text>Usuário não logado</Text>;
   }
 
+  // Converter timestamp para data
+  const dataNascimento = new Date(user.dataNascimento.seconds * 1000);
+
   return (
     <View style={styles.container}>
       {user.profilePicture && (
@@ -53,7 +56,7 @@ export default function ProfileRead() {
               <Text style={styles.bold}>Localização: </Text>{user.localizacao}
             </Text>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento).format('DD/MM/YYYY')}
+              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(dataNascimento).format('DD/MM/YYYY')}
             </Text>
 
           </>
