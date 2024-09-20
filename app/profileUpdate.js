@@ -65,13 +65,13 @@ export default function ProfileUpdate() {
         username: usernameRef.current,
         profilePicture: profileImage || user.profilePicture,
         telefone: telefone,
-        dataNascimento: dataNascimentoFirebase, // Adicione o campo dataNascimento aqui
         ...(user.role === 'profissional' && {
           especialidade: selectedEspecialidade,
           experiencia: experiencia,
           sexo: sexo,
           instagram: instagram,
-          localizacao: localizacao
+          localizacao: localizacao,
+          dataNascimento: dataNascimentoFirebase,
         })
       });
 
@@ -135,7 +135,7 @@ export default function ProfileUpdate() {
           <TextInput
             defaultValue={user.username}
             onChangeText={value => usernameRef.current = value}
-            placeholder="Nome do usuário"
+            placeholder="Nome"
             style={styles.textInput}
           />
           <TextInput
@@ -145,25 +145,6 @@ export default function ProfileUpdate() {
             style={styles.textInput}
           />
 
-          {/* Campo de Data de Nascimento */}
-          <TouchableOpacity onPress={showDatepicker}>
-            <TextInput
-              placeholder="Data de Nascimento"
-              style={styles.textInput}
-              value={dataNascimento.toLocaleDateString()}
-              editable={false}
-            />
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={dataNascimento}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={onChangeDataNascimento}
-            />
-          )}
         </View>
 
         {user.role === 'profissional' && (
@@ -219,6 +200,26 @@ export default function ProfileUpdate() {
                 style={styles.textInput}
               />
             </View>
+
+                      {/* Campo de Data de Nascimento */}
+          <TouchableOpacity onPress={showDatepicker}>
+            <TextInput
+              placeholder="Data de Nascimento"
+              style={styles.textInput}
+              value={dataNascimento.toLocaleDateString()}
+              editable={false}
+            />
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={dataNascimento}
+              mode="date"
+              is24Hour={true}
+              display="default"
+              onChange={onChangeDataNascimento}
+            />
+          )}
           </>
         )}
 

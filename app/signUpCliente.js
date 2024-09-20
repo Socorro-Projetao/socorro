@@ -78,7 +78,7 @@ export default function SignUpCliente() {
             <View style={styles.inputs}>
                 <TextInput
                     onChangeText={value => usernameRef.current = value}
-                    placeholder="Nome do usuário"
+                    placeholder="Nome"
                     style={styles.textInput}
                 />
                 <TextInput
