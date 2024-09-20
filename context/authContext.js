@@ -143,9 +143,8 @@ export const AuthContextProvider = ({ children }) => {
                 telefone,
                 instagram,
                 localizacao,
-                sdataNascimento
+                dataNascimento: sdataNascimento
             });
-            console.log(sdataNascimento);
             return { success: true, data: response?.user };
         } catch (e) {
             let msg = e.message;
