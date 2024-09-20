@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#fff',
-    //padding: 10,
   },
   title: {
     fontSize: 20,
@@ -135,14 +134,14 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginTop: 10,
     marginBottom: 10,
-    
+    marginLeft: wp(2),
   },
   subTitle: {
     fontSize: 16,
     textAlign: 'left',
     marginTop: 10,
     marginBottom: 10,
-
+    marginLeft: wp(2),
   },
   card: {
     backgroundColor: '#f0f0f0',
@@ -162,14 +161,11 @@ const styles = StyleSheet.create({
   },
   textAnuncio: {
     textAlign: 'center',
-
   },
   searchIcon: {
     position: 'absolute',
     right: wp(2),
     bottom: 5,
-
-
   },
 });
 
