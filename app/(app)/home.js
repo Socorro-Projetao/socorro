@@ -1,12 +1,11 @@
 import React, { useState, useEffect, Drawer } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, ScrollView, SectionList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, SectionList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 
 const data = [
-  // Dados fictícios para os cards
   { id: 1, name: 'João Silva', role: 'Pedreiro', image: require('../../assets/images/icon_perfil.png') },
   { id: 2, name: 'Maria Oliveira', role: 'Vidraceiro', image: require('../../assets/images/icon_perfil.png') },
   { id: 3, name: 'Sandro Ferreira', role: 'Eletricista', image: require('../../assets/images/icon_perfil.png') },
@@ -19,7 +18,6 @@ const publicidade = [
   { id: 2, texto: 'anuncie aqui 2' },
   { id: 3, texto: 'anuncie aqui 3' },
 ];
-
 
 const Item = ({ image, name, role }) => (
   <TouchableOpacity style={styles.card}>
