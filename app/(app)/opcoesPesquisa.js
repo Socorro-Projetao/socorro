@@ -8,9 +8,6 @@ export default function OpcoesPesquisa() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.push("profileSelection")} style={styles.button}>
-        <Text style={styles.buttonText}>Cadastrar outro usuário</Text>
-      </TouchableOpacity>
       <TouchableOpacity onPress={() => router.push("pesquisaLocalizacao")} style={styles.button}>
         <Text style={styles.buttonText}>Pesquisar por localização</Text>
       </TouchableOpacity>
