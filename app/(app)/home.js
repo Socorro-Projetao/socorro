@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Drawer } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, ScrollView, SectionList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -46,6 +46,50 @@ const Home = () => {
     setRandomAnuncio(newRandomAnuncio);
   }, []);
 
+  // Dados para a SectionList
+  const sections = [
+    {
+      title: 'Últimos Contratados',
+      data: [data],
+    },
+    {
+      title: 'Anúncios',
+      data: [randomAnuncio],
+    },
+    {
+      title: 'Principais Especialidades',
+      data: [data],
+    },
+    {
+      title: 'Pedreiro',
+      data: [data],
+    },
+    {
+      title: 'Vidraceiro',
+      data: [data],
+    },
+  ];
+
+  const renderHorizontalFlatList = (filteredData) => (
+    <FlatList
+      data={filteredData}
+      renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
+      keyExtractor={(item) => item.id.toString()}
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+    />
+  );
+
+  const renderSection = ({ section }) => {
+    if (section.title === 'Anúncios') {
+      return section.data[0].map(anuncio => (
+        <Anuncio key={anuncio.id} texto={anuncio.texto} />
+      ));
+    } else {
+      return renderHorizontalFlatList(section.data[0]);
+    }
+  };
+
   return (
 
     <View style={styles.container}>
@@ -64,69 +108,26 @@ const Home = () => {
           onPress={() => router.push("opcoesPesquisa")}
         />
       </View>
-      <ScrollView Style={styles.container}>
-        <Text style={styles.title}>Últimos Contratados</Text>
 
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
-        <FlatList
-          data={randomAnuncio}
-          renderItem={({ item }) => <Anuncio texto={item.texto} />}
-          keyExtractor={(item) => item.id}
-        />
-        <Text style={styles.title}>Principais Especialidades</Text>
-        <Text style={styles.subTitle}>Pedreiro</Text>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
-        <Text style={styles.subTitle}>Vidraceiro</Text>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, index) => item + index}
+        renderSectionHeader={({ section: { title } }) => {
+          let titleStyle = styles.title;
+          if (title === 'Últimos Contratados' || title === 'Principais Especialidades' || title === 'Anúncios'){
+            titleStyle = styles.title;
+          }
+          else if (title === 'Pedreiro' || title === 'Vidraceiro'){
+            titleStyle = styles.subTitle;
+          } 
 
-        <FlatList
-          data={randomAnuncio}
-          renderItem={({ item }) => <Anuncio texto={item.texto} />}
-          keyExtractor={(item) => item.id}
-        />
-
-        <Text style={styles.subTitle}>Eletricista</Text>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
-
-        <Text style={styles.subTitle}>Pintor</Text>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
-
-        <FlatList
-          data={randomAnuncio}
-          renderItem={({ item }) => <Anuncio texto={item.texto} />}
-          keyExtractor={(item) => item.id}
-        />
-      </ScrollView>
+          return (
+            <Text style={titleStyle}>{title}</Text>
+          )
+        }}        
+        renderItem={renderSection}
+        stickySectionHeadersEnabled={false}
+      />
     </View>
   );
 };
@@ -139,13 +140,16 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'left',
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 10,
     marginLeft: wp(2),
   },
   subTitle: {
@@ -161,6 +165,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
+    width: 120,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 10,
   },
   cardAnuncio: {
     backgroundColor: '#f0f0f0',
@@ -175,9 +186,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   searchIcon: {
-    position: 'absolute',
-    right: wp(2),
-    bottom: 5,
+    marginRight: wp(2),
   },
 });
 
