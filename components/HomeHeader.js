@@ -1,4 +1,4 @@
-import { View, Text, Platform, StyleSheet } from 'react-native'
+import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ import {
 import { MenuItem } from './CustomMenuItems';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import profileScreen from '../app/profileScreen';
+
 
 const isIOS = Platform.OS == 'ios'
 export default function HomeHeader() {
@@ -21,7 +21,7 @@ export default function HomeHeader() {
     const { top } = useSafeAreaInsets()
     const { user, logout } = useAuth()
     const router = useRouter();
-    
+
     const handleProfile = () => {
         router.push("profileScreen")
     }
@@ -32,7 +32,13 @@ export default function HomeHeader() {
 
     return (
         <View style={[styles.container, { paddingTop: isIOS ? top : top + 10 }]} >
-            <View>
+            <View style={styles.headerLeft}>
+                <TouchableOpacity onPress={() => router.push("home")}>
+                    <AntDesign
+                        name="left"
+                        size={25}
+                        color="#FFFFFF" />
+                </TouchableOpacity>
                 <Text style={styles.headerText}>SOCORRO!!</Text>
             </View>
 
@@ -52,14 +58,14 @@ export default function HomeHeader() {
                             text='Perfil'
                             action={handleProfile}
                             value={null}
-                            icon={<Feather name='user' size={hp(2.5)} color= '#0F1626'/>}
+                            icon={<Feather name='user' size={hp(2.5)} color='#0F1626' />}
                         />
-                        <Divider/>
+                        <Divider />
                         <MenuItem
                             text='Sair'
                             action={handleLogout}
                             value={null}
-                            icon={<AntDesign name='logout' size={hp(2.5)} color= '#0F1626'/>}
+                            icon={<AntDesign name='logout' size={hp(2.5)} color='#0F1626' />}
                         />
                     </MenuOptions>
                 </Menu>
@@ -70,7 +76,7 @@ export default function HomeHeader() {
 
 const Divider = () => {
     return (
-        <View style={styles.divider}/>
+        <View style={styles.divider} />
     )
 }
 
@@ -85,9 +91,14 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 24,
         alignItems: 'center',
     },
+    headerLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     headerText: {
         fontSize: hp(3),
         color: '#EFC51B',
+        marginLeft: wp(3),
     },
     image: {
         width: hp(5),
@@ -99,12 +110,10 @@ const styles = StyleSheet.create({
     },
     optionsContainer: {
         borderRadius: 20,
-        //borderCurve: 'continuous',
         marginTop: hp(2),
-        //marginLeft: -30,
         backgroundColor: 'white',
         shadowOpacity: 0.2,
-        shadowOffset: {width: 0, height: 0},
+        shadowOffset: { width: 0, height: 0 },
         shadowRadius: 4,
         width: 160,
         position: 'absolute',
@@ -113,7 +122,7 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: '#EFC51B', // Ajuste a cor conforme necessário
+        backgroundColor: '#EFC51B',
         width: '100%',
     },
 });
