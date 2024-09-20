@@ -1,15 +1,21 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import {Stack} from 'expo-router'
+import { Stack } from 'expo-router'
 import HomeHeader from '../../components/HomeHeader'
 
 export default function _layout() {
   return (
     <Stack>
-      <Stack.Screen 
+      <Stack.Screen
         name="home"
         options={{
-          header: () => <HomeHeader/>
+          header: () => <HomeHeader />
+        }}
+      />
+      <Stack.Screen
+        name="opcoesPesquisa"
+        options={{
+          header: () => <HomeHeader />
         }}
       />
     </Stack>
