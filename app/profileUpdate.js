@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../components/Loading';
@@ -11,7 +11,7 @@ import { db } from '../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
 import { sexoOpcoes } from './selectSexOptions';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function ProfileUpdate() {
   const { user, isAuthenticated, updateUserData } = useAuth();
@@ -26,6 +26,9 @@ export default function ProfileUpdate() {
   const [instagram, setinstagram] = useState(user?.instagram || "");
   const [localizacao, setLocalizacao] = useState(user?.localizacao || "");
 
+  // Estado para a data de nascimento
+  const [dataNascimento, setDataNascimento] = useState(user?.dataNascimento ? new Date(user.dataNascimento.toDate()) : new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -50,11 +53,19 @@ export default function ProfileUpdate() {
         docRef = doc(db, "users", user.userId);
       }
 
+      // Converter a data para um formato compatível com o Firebase (Timestamp)
+      const dataNascimentoFirebase = new Date(
+        dataNascimento.getFullYear(),
+        dataNascimento.getMonth(),
+        dataNascimento.getDate()
+      );
+
       // Atualiza os dados no Firestore
       await updateDoc(docRef, {
         username: usernameRef.current,
         profilePicture: profileImage || user.profilePicture,
         telefone: telefone,
+        dataNascimento: dataNascimentoFirebase, // Adicione o campo dataNascimento aqui
         ...(user.role === 'profissional' && {
           especialidade: selectedEspecialidade,
           experiencia: experiencia,
@@ -105,6 +116,16 @@ export default function ProfileUpdate() {
     }
   };
 
+  const onChangeDataNascimento = (event, selectedDate) => {
+    const currentDate = selectedDate || dataNascimento;
+    setShowDatePicker(Platform.OS === 'ios'); 
+    setDataNascimento(currentDate);
+  };
+
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
+
   return (
     <CustomKeyboardView>
       <View style={styles.container}>
@@ -123,6 +144,26 @@ export default function ProfileUpdate() {
             placeholder="Telefone"
             style={styles.textInput}
           />
+
+          {/* Campo de Data de Nascimento */}
+          <TouchableOpacity onPress={showDatepicker}>
+            <TextInput
+              placeholder="Data de Nascimento"
+              style={styles.textInput}
+              value={dataNascimento.toLocaleDateString()}
+              editable={false}
+            />
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={dataNascimento}
+              mode="date"
+              is24Hour={true}
+              display="default"
+              onChange={onChangeDataNascimento}
+            />
+          )}
         </View>
 
         {user.role === 'profissional' && (
@@ -205,11 +246,12 @@ export default function ProfileUpdate() {
             </View>
           )}
         </View>
-        
+
       </View>
     </CustomKeyboardView>
   );
 }
+
 const styles = {
   container: {
       flex: 1,
