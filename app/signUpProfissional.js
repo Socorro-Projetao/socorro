@@ -22,7 +22,7 @@ export default function SignUpProfissional() {
     const [experiencia, setExperiencia] = useState(null);
     const [sexo, setSexo] = useState(null);
     const [telefone, setTelefone] = useState(null);
-    const [redeSocial, setRedeSocial] = useState(null);
+    const [instagram, setinstagram] = useState(null);
     const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
@@ -43,7 +43,7 @@ export default function SignUpProfissional() {
     };
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !redeSocial || !localizacao || !dataNascimento) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
@@ -57,7 +57,7 @@ export default function SignUpProfissional() {
             selectedEspecialidade, 
             sexo, 
             telefone, 
-            redeSocial, 
+            instagram, 
             experiencia, 
             localizacao,
             dataNascimento 
@@ -130,8 +130,8 @@ export default function SignUpProfissional() {
                         style={styles.textInput}
                     />
                     <TextInput
-                        onChangeText={value => setRedeSocial(value)}
-                        placeholder="Rede social"
+                        onChangeText={value => setinstagram(value)}
+                        placeholder="Instagram"
                         style={styles.textInput}
                     />
                     <TextInput
