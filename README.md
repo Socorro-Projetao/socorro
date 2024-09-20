@@ -49,7 +49,7 @@ Requisitos Funcionais / Funcionalidades:
 
 ## :link: Acesso a aplicação
 
-### Você pode acessar a aplicação através do seguinte link: [Socorro !!](https://socorrobd.web.app/)
+### Em construção
 
 ## :construction: Status do Projeto
 :hammer:Em construção...
