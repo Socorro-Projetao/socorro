@@ -118,7 +118,7 @@ export default function ProfileUpdate() {
 
   const onChangeDataNascimento = (event, selectedDate) => {
     const currentDate = selectedDate || dataNascimento;
-    setShowDatePicker(Platform.OS === 'ios'); 
+    setShowDatePicker(Platform.OS === 'ios');
     setDataNascimento(currentDate);
   };
 
@@ -201,25 +201,28 @@ export default function ProfileUpdate() {
               />
             </View>
 
-                      {/* Campo de Data de Nascimento */}
-          <TouchableOpacity onPress={showDatepicker}>
-            <TextInput
-              placeholder="Data de Nascimento"
-              style={styles.textInput}
-              value={dataNascimento.toLocaleDateString()}
-              editable={false}
-            />
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={dataNascimento}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={onChangeDataNascimento}
-            />
-          )}
+            {/* Campo de Data de Nascimento */}
+            <View style={styles.inputs}>
+              <TouchableOpacity onPress={showDatepicker}>
+                <TextInput
+                  placeholder="Data de Nascimento"
+                  style={styles.textInput}
+                  value={dataNascimento.toLocaleDateString()}
+                  editable={false}
+                />
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={dataNascimento}
+                  mode="date"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeDataNascimento}
+                />
+              )}
+            </View>
+
           </>
         )}
 
@@ -255,32 +258,32 @@ export default function ProfileUpdate() {
 
 const styles = {
   container: {
-      flex: 1,
-      alignItems: 'center',
-      backgroundColor: '#0F1626',
-      paddingTop: hp('15%'),
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#0F1626',
+    paddingTop: hp('15%'),
   },
   texto: {
-      color: '#FFFFFF',
-      fontSize: hp(3),
-      fontWeight: '600',
-      fontStyle: 'italic',
-      marginBottom: hp('6%'),
+    color: '#FFFFFF',
+    fontSize: hp(3),
+    fontWeight: '600',
+    fontStyle: 'italic',
+    marginBottom: hp('6%'),
   },
   inputs: {
-      width: wp('80%'),
+    width: wp('80%'),
   },
   textInput: {
-      fontStyle: 'italic',
-      width: '100%',
-      padding: hp('2%'),
-      backgroundColor: '#FFFFFF',
-      color: '#000000',
-      borderRadius: 10,
-      marginBottom: hp('3%'),
+    fontStyle: 'italic',
+    width: '100%',
+    padding: hp('2%'),
+    backgroundColor: '#FFFFFF',
+    color: '#000000',
+    borderRadius: 10,
+    marginBottom: hp('3%'),
   },
   pickerContainer: {
-      width: wp('80%'),
+    width: wp('80%'),
   },
   buttonAtualizar: {
     width: '50%',
@@ -300,63 +303,63 @@ const styles = {
     marginRight: wp('8%'),
   },
   button: {
-      flexDirection: 'row', 
-      justifyContent: 'space-around', 
-      width: '80%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
   },
   buttonText: {
-      fontSize: hp(2.5),
-      color: '#000000',
+    fontSize: hp(2.5),
+    color: '#000000',
   },
   imagePicker: {
-      width: wp('80%'),
-      height: hp('15%'),
-      backgroundColor: '#FFFFFF',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 10,
-      marginBottom: hp('3%'),
+    width: wp('80%'),
+    height: hp('15%'),
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginBottom: hp('3%'),
   },
   imagePickerText: {
-      color: '#000000',
-      fontSize: hp(2),
-      fontWeight: '600',
+    color: '#000000',
+    fontSize: hp(2),
+    fontWeight: '600',
   },
   profileImage: {
-      width: '100%',
-      height: '100%',
-      borderRadius: 10,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
   },
   loading: {
-      // estilos adicionais se necessário
+    // estilos adicionais se necessário
   },
 };
 
 const pickerSelectStyles = {
   inputIOS: {
-      fontSize: hp(2),
-      width: '100%',
-      borderWidth: 1,
-      borderColor: 'gray',
-      borderRadius: 10,
-      color: '#000000',
-      backgroundColor: '#FFFFFF',
-      marginBottom: hp('3%'),
-      fontStyle: 'italic',
+    fontSize: hp(2),
+    width: '100%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
+    marginBottom: hp('3%'),
+    fontStyle: 'italic',
   },
   inputAndroid: {
-      fontSize: hp(2),
-      width: '100%',
-      borderWidth: 1,
-      borderColor: 'gray',
-      borderRadius: 10,
-      color: '#000000',
-      backgroundColor: '#FFFFFF',
-      marginBottom: hp('3%'),
-      fontStyle: 'italic',
+    fontSize: hp(2),
+    width: '100%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
+    marginBottom: hp('3%'),
+    fontStyle: 'italic',
   },
   placeholder: {
-      fontStyle: 'italic',
-      color: 'gray',
+    fontStyle: 'italic',
+    color: 'gray',
   },
 };
