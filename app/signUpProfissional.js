@@ -229,7 +229,8 @@ const styles = {
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#0F1626',
-        paddingTop: hp('15%'),
+        paddingTop: hp('10%'),
+        paddingBottom: hp('10%'),
     },
     texto: {
         color: '#FFFFFF',
