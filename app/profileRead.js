@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuth } from '../context/authContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
-
+import moment from 'moment'; 
 export default function ProfileRead() {
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -52,6 +52,10 @@ export default function ProfileRead() {
             <Text style={styles.label}>
               <Text style={styles.bold}>Localização: </Text>{user.localizacao}
             </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento).format('DD/MM/YYYY')}
+            </Text>
+
           </>
         )}
       </View>

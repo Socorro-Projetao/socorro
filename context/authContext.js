@@ -58,6 +58,7 @@ export const AuthContextProvider = ({ children }) => {
                     telefone: data.telefone,
                     instagram: data.instagram,
                     localizacao: data.localizacao,
+                    dataNascimento: data.dataNascimento,
                     role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
                 });
             } else {
@@ -119,10 +120,18 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, sexo, telefone, instagram, experiencia, localizacao) => {
+    const registerProfessional = async (email, password, username, profilePicture, selectedEspecialidade, sexo, telefone, instagram, experiencia, localizacao, dataNascimento) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
+
+
+            const sdataNascimento = new Date(
+                dataNascimento.getFullYear(), 
+                dataNascimento.getMonth(), 
+                dataNascimento.getDate()
+            );
+        
 
             await setDoc(doc(db, "professionals", response?.user?.uid), {
                 username,
@@ -133,9 +142,10 @@ export const AuthContextProvider = ({ children }) => {
                 sexo,
                 telefone,
                 instagram,
-                localizacao
+                localizacao,
+                sdataNascimento
             });
-
+            console.log(sdataNascimento);
             return { success: true, data: response?.user };
         } catch (e) {
             let msg = e.message;

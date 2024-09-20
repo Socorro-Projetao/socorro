@@ -1,7 +1,9 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable, Platform } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useRouter } from 'expo-router';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';   
+
+import { useRouter } from 'expo-router';   
+
 import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
@@ -9,6 +11,7 @@ import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
 import { sexoOpcoes } from './selectSexOptions';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -19,21 +22,46 @@ export default function SignUpProfissional() {
     const [experiencia, setExperiencia] = useState(null);
     const [sexo, setSexo] = useState(null);
     const [telefone, setTelefone] = useState(null);
-    const [instagram, setinstagram] = useState(null);
+    const [redeSocial, setRedeSocial] = useState(null);
     const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
     const passwordRef = useRef("");
     const { registerProfessional } = useAuth();
 
+    const [dataNascimento, setDataNascimento] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const onChangeDataNascimento = (event, selectedDate) => {
+        const currentDate = selectedDate || dataNascimento;
+        setShowDatePicker(Platform.OS === 'ios');
+        setDataNascimento(currentDate);
+    };
+
+    const showDatepicker = () => {
+        setShowDatePicker(true);
+    };
+
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !redeSocial || !localizacao || !dataNascimento) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
 
         setLoading(true);
-        const response = await registerProfessional(emailRef.current, passwordRef.current, usernameRef.current, profileImage, selectedEspecialidade, sexo, telefone, instagram, experiencia, localizacao);
+        const response = await registerProfessional(
+            emailRef.current, 
+            passwordRef.current, 
+            usernameRef.current, 
+            profileImage, 
+            selectedEspecialidade, 
+            sexo, 
+            telefone, 
+            redeSocial, 
+            experiencia, 
+            localizacao,
+            dataNascimento 
+        );
         setLoading(false);
 
         if (!response.success) {
@@ -45,8 +73,8 @@ export default function SignUpProfissional() {
     }
 
     const handlePress = () => {
-        if (handleRegister()) {  // Primeira função
-            router.push("signUpConfirmation");  // Segunda função
+        if (handleRegister()) { 
+            router.push("signUpConfirmation"); 
         }
     };
 
@@ -60,12 +88,14 @@ export default function SignUpProfissional() {
 
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
+            allowsEditing: true,   
+
             aspect: [4, 4],
             quality: 1,
         });
 
-        if (!pickerResult.canceled) {
+        if (!pickerResult.canceled)   
+ {
             setProfileImage(pickerResult.assets[0].uri);
         }
     }
@@ -100,8 +130,8 @@ export default function SignUpProfissional() {
                         style={styles.textInput}
                     />
                     <TextInput
-                        onChangeText={value => setinstagram(value)}
-                        placeholder="Instagram"
+                        onChangeText={value => setRedeSocial(value)}
+                        placeholder="Rede social"
                         style={styles.textInput}
                     />
                     <TextInput
@@ -109,6 +139,26 @@ export default function SignUpProfissional() {
                         placeholder="Localização"
                         style={styles.textInput}
                     />
+
+                    {/* Campo de Data de Nascimento */}
+                    <TouchableOpacity onPress={showDatepicker}>
+                        <TextInput
+                            placeholder="Data de Nascimento"
+                            style={styles.textInput}
+                            value={dataNascimento.toLocaleDateString()}
+                            editable={false}
+                        />
+                    </TouchableOpacity>
+                    {showDatePicker && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={dataNascimento}
+                            mode="date"
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChangeDataNascimento}
+                        />
+                    )}
                 </View>
 
                 {/* Selector de sexo */}
