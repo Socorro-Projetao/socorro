@@ -54,7 +54,7 @@ export default function ProfileRead() {
               <Text style={styles.bold}>Localização: </Text>{user.localizacao}
             </Text>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(dataNascimento).format('DD/MM/YYYY')}
+              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
             </Text>
 
           </>

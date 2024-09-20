@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useRouter } from 'expo-router';
 import { getAuth, deleteUser } from 'firebase/auth';
 import { getFirestore, doc, deleteDoc, getDoc } from 'firebase/firestore'; // Adicionei getDoc
+import moment from 'moment'; 
 
 export default function ProfileDelete() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -89,6 +90,9 @@ export default function ProfileDelete() {
         <Text style={styles.label}>
           <Text style={styles.bold}>E-mail: </Text>{user.email}
         </Text>
+        <Text style={styles.label}>
+          <Text style={styles.bold}>Telefone: </Text>{user.telefone}
+        </Text>
 
         {user.role === 'profissional' && (
           <>
@@ -97,6 +101,18 @@ export default function ProfileDelete() {
             </Text>
             <Text style={styles.label}>
               <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Sexo: </Text>{user.sexo}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Instagram: </Text>{user.instagram}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Localização: </Text>{user.localizacao}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
             </Text>
           </>
         )}
@@ -109,10 +125,10 @@ export default function ProfileDelete() {
         <TouchableOpacity onPress={() => router.push("profileUpdate")} style={styles.buttonEditar}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleDelete} style={styles.buttonExcluir}>
+      </View>
+      <TouchableOpacity onPress={handleDelete} style={styles.buttonExcluir}>
           <Text style={styles.buttonText}>Excluir Perfil</Text>
         </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -123,58 +139,64 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#0F1626',
   },
   profilePicture: {
-    width: wp('30%'),
-    height: wp('30%'),
-    borderRadius: wp('15%'),
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: hp('2%'),
+    borderWidth: 2,
+    borderColor: '#EFC51B',
   },
   infoContainer: {
     width: '100%',
-    alignItems: 'center',
-    marginBottom: hp('2%'),
+    alignItems: 'left',
+    marginLeft: hp('15%'),
+    marginBottom: hp('5%'),
   },
   label: {
     fontSize: hp('2%'),
     marginBottom: hp('1%'),
+    color: '#fff',
   },
   bold: {
     fontWeight: 'bold',
+    color: '#fff',
   },
   buttonContainer: {
-    width: '100%',
+    width: '80%',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: hp('2%'),
+    marginBottom: hp('2%')
   },
   buttonVoltar: {
-    width: '30%',
-    backgroundColor: '#888',
+    width: '50%',
+    backgroundColor: '#D9D9D9',
     paddingVertical: hp('1.5%'),
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: wp('8%'),
   },
   buttonEditar: {
-    width: '30%',
-    backgroundColor: '#4CAF50',
+    width: '50%',
+    backgroundColor: '#EFC51B',
     paddingVertical: hp('1.5%'),
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonExcluir: {
-    width: '30%',
-    backgroundColor: 'red',
+    width: '50%',
+    backgroundColor: '#E58B8B',
     paddingVertical: hp('1.5%'),
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: hp('2%'),
+    color: '#000000',
+    fontSize: hp(2.5),
   },
 });
