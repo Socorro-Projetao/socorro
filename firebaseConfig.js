@@ -27,3 +27,4 @@ export const db = getFirestore(app);
 
 export const userRef = collection(db, 'users');
 export const professionalsRef = collection(db, 'professionals');
+export const anunciantesRef = collection(db, 'anunciantes');
