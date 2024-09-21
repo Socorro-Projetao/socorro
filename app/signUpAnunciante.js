@@ -1,14 +1,14 @@
-import { View, Text, TouchableOpacity, Pressable, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity, Pressable, TextInput, Alert } from 'react-native'
 import React, { useState, useRef } from 'react'
 import { useAuth } from '../context/authContext'
 import { useRouter } from 'expo-router'
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import Loading from '../components/Loading';
 
 export default function signUpAnunciante() {
     const router = useRouter()
-    const { register } = useAuth()
+    const { registerAnunciante } = useAuth()
     const [loading, setLoading] = useState(false)
 
     const nomeFantasiaRef = useRef("")
@@ -22,7 +22,7 @@ export default function signUpAnunciante() {
         }
         setLoading(true)
 
-        let response = await register(emailAnuncianteRef.current, passwordRef.current, nomeFantasiaRef.current)
+        let response = await registerAnunciante(emailAnuncianteRef.current, passwordRef.current, nomeFantasiaRef.current)
         setLoading(false)
 
         if (!response.success) {
