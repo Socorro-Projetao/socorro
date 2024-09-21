@@ -11,7 +11,7 @@ export default function signUpAnunciante() {
     const { register } = useAuth()
     const [loading, setLoading] = useState(false)
 
-    const nomeFantasia = useRef("")
+    const nomeFantasiaRef = useRef("")
     const emailAnuncianteRef = useRef("")
     const passwordRef = useRef("")
 
@@ -35,7 +35,7 @@ export default function signUpAnunciante() {
     const handlePress = async () => {
         const success = await handleRegister()
         if (success) {
-            router.push("signUpConfirmation"); 
+            router.push("signUpConfirmation");
         }
     };
 
@@ -46,13 +46,19 @@ export default function signUpAnunciante() {
 
                 <View style={styles.inputs}>
                     <TextInput
-                        onChangeText={value => usernameRef.current = value}
-                        placeholder="Nome"
+                        onChangeText={value => nomeFantasiaRef.current = value}
+                        placeholder="Nome Fantasia"
                         style={styles.textInput}
                     />
                     <TextInput
-                        onChangeText={value => emailRef.current = value}
-                        placeholder="E-mail"
+                        onChangeText={value => emailAnuncianteRef.current = value}
+                        placeholder="E-mail Corpotativo"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => passwordRef.current = value}
+                        secureTextEntry
+                        placeholder="Senha"
                         style={styles.textInput}
                     />
                 </View>
@@ -130,15 +136,15 @@ const styles = {
         color: '#000000',
     },
     bottom: {
-      flexDirection: 'row',
+        flexDirection: 'row',
     },
     bottomText: {
-      fontSize: hp(1.8),
-      color: '#FFFFFF',
+        fontSize: hp(1.8),
+        color: '#FFFFFF',
     },
     bottomTextSignIn: {
-      fontSize: hp(1.8),
-      color: '#EFC51B',
-      fontWeight: '600',
+        fontSize: hp(1.8),
+        color: '#EFC51B',
+        fontWeight: '600',
     },
 }
