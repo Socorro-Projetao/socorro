@@ -17,6 +17,9 @@ export default function profileSelection() {
       <TouchableOpacity onPress={() => router.push("signUpProfissional")} style={styles.option}>
         <Text style={styles.optionText}>Profissional</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("signUpAnunciante")} style={styles.option}>
+        <Text style={styles.optionText}>Anunciante</Text>
+      </TouchableOpacity>
     </View>
   )
 }

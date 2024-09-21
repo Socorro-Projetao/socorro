@@ -23,6 +23,7 @@ export const AuthContextProvider = ({ children }) => {
         })
         return unsub
     }, [])
+
     const updateUserData = async (userId) => {
         let docRef = doc(db, "users", userId);
         let docSnap = await getDoc(docRef);
@@ -66,6 +67,7 @@ export const AuthContextProvider = ({ children }) => {
             }
         }
     };
+
     const login = async (email, password) => {
         try {
             const response = await signInWithEmailAndPassword(auth, email, password );
@@ -158,6 +160,28 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
+    const registerAnunciante = async (email, password, nomeFantasia) => {
+        try {
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            console.log('Usuário criado: ', response?.user);
+    
+            await setDoc(doc(db, "anunciantes", response?.user?.uid), {
+                nomeFantasia,
+                userId: response?.user?.uid,
+            });
+            
+            return { success: true, data: response?.user };
+        } catch (e) {
+            let msg = e.message;
+            
+            if(msg.includes('auth/invalid-email')) msg = "E-mail inválido";
+            
+            console.error("Erro ao registrar anunciante: ", msg); 
+            
+            return { success: false, msg };
+        }
+    }
+
     const resetPassword = async (email) => {
         try {
             await sendPasswordResetEmail(auth, email);
@@ -177,7 +201,7 @@ export const AuthContextProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, updateUserData, resetPassword  }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, registerAnunciante, updateUserData, resetPassword  }}>
             {children}
         </AuthContext.Provider>
     )
