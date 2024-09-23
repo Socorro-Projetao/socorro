@@ -1,8 +1,8 @@
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable, Platform } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';   
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-import { useRouter } from 'expo-router';   
+import { useRouter } from 'expo-router';
 
 import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
@@ -50,17 +50,17 @@ export default function SignUpProfissional() {
 
         setLoading(true);
         const response = await registerProfessional(
-            emailRef.current, 
-            passwordRef.current, 
-            usernameRef.current, 
-            profileImage, 
-            selectedEspecialidade, 
-            sexo, 
-            telefone, 
-            instagram, 
-            experiencia, 
+            emailRef.current,
+            passwordRef.current,
+            usernameRef.current,
+            profileImage,
+            selectedEspecialidade,
+            sexo,
+            telefone,
+            instagram,
+            experiencia,
             localizacao,
-            dataNascimento 
+            dataNascimento
         );
         setLoading(false);
 
@@ -73,8 +73,8 @@ export default function SignUpProfissional() {
     }
 
     const handlePress = () => {
-        if (handleRegister()) { 
-            router.push("signUpConfirmation"); 
+        if (handleRegister()) {
+            router.push("signUpConfirmation");
         }
     };
 
@@ -88,14 +88,13 @@ export default function SignUpProfissional() {
 
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,   
+            allowsEditing: true,
 
             aspect: [4, 4],
             quality: 1,
         });
 
-        if (!pickerResult.canceled)   
- {
+        if (!pickerResult.canceled) {
             setProfileImage(pickerResult.assets[0].uri);
         }
     }
@@ -205,11 +204,10 @@ export default function SignUpProfissional() {
                     {loading ? (
                         <Loading style={styles.loading} />
                     ) : (
-                        <View style={styles.button}>
-                            <TouchableOpacity onPress={handlePress}>
-                                <Text style={styles.buttonText}>Cadastrar-se</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity onPress={handlePress} style={styles.button}>
+                            <Text style={styles.buttonText}>Cadastrar-se</Text>
+                        </TouchableOpacity>
+
                     )}
                 </View>
 

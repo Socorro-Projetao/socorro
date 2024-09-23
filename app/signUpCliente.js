@@ -10,7 +10,7 @@ import { useAuth } from '../context/authContext';
 export default function SignUpCliente() {
 
     const router = useRouter();
-    const {register} = useAuth();
+    const { register } = useAuth();
     const [loading, setLoading] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
     const [telefone, setTelefone] = useState(null);
@@ -21,17 +21,17 @@ export default function SignUpCliente() {
 
     const handleRegister = async () => {
         if (!emailRef.current || !passwordRef.current || !usernameRef.current || !telefone) {
-          //não é necessário inserir imagem de perfil no ato do cadastro
+            //não é necessário inserir imagem de perfil no ato do cadastro
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false
         }
         setLoading(true)
-        
+
         let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileImage, telefone)
         setLoading(false)
 
         //console.log('resultado: ', response)
-        if(!response.success){
+        if (!response.success) {
             Alert.alert('Cadastrar', response.msg)
             return false
         }
@@ -48,92 +48,92 @@ export default function SignUpCliente() {
     };
 
     const pickImage = async () => {
-      let result = await ImagePicker.requestCameraPermissionsAsync();
+        let result = await ImagePicker.requestCameraPermissionsAsync();
 
-      //solicitar permissão para acessar galeria
-      if (result.granted === false) {
-        Alert.alert("Permissão necessária", "é necessário permitir o acesso à galeria para escolher uma imagem.")
-        return
-      } 
+        //solicitar permissão para acessar galeria
+        if (result.granted === false) {
+            Alert.alert("Permissão necessária", "é necessário permitir o acesso à galeria para escolher uma imagem.")
+            return
+        }
 
-      //abrir a galeria
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 4],
-        quality: 1,
-      })
+        //abrir a galeria
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+        })
 
-      if (!pickerResult.canceled) {
-        setProfileImage(pickerResult.assets[0].uri)
-      }
+        if (!pickerResult.canceled) {
+            setProfileImage(pickerResult.assets[0].uri)
+        }
     }
 
     return (
-      <CustomKeyboardView>
-        <View style={styles.container}>
-            <Text style={styles.texto}>Preencha os campos abaixo:</Text>
+        <CustomKeyboardView>
+            <View style={styles.container}>
+                <Text style={styles.texto}>Preencha os campos abaixo:</Text>
 
-            {/* inputs */}
-            <View style={styles.inputs}>
-                <TextInput
-                    onChangeText={value => usernameRef.current = value}
-                    placeholder="Nome"
-                    style={styles.textInput}
-                />
-                <TextInput
-                    onChangeText={value => emailRef.current = value}
-                    placeholder="E-mail"
-                    style={styles.textInput}
-                />
-                <TextInput
-                    onChangeText={value => setTelefone(value)}
-                    placeholder="Telefone"
-                    style={styles.textInput}
-                />
-                <TextInput
-                    onChangeText={value => passwordRef.current = value}
-                    secureTextEntry
-                    placeholder="Senha"
-                    style={styles.textInput}
-                />
-            </View>
-
-            {/* Campo para selecionar a imagem de perfil */}
-            <TouchableOpacity onPress={pickImage}>
-                <View style={styles.imagePicker}>
-                    {profileImage ? (
-                        <Image source={{ uri: profileImage }} style={styles.profileImage} />
-                    ) : (
-                        <Text style={styles.imagePickerText}>Selecionar imagem de perfil</Text>
-                    )}
+                {/* inputs */}
+                <View style={styles.inputs}>
+                    <TextInput
+                        onChangeText={value => usernameRef.current = value}
+                        placeholder="Nome"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => emailRef.current = value}
+                        placeholder="E-mail"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => setTelefone(value)}
+                        placeholder="Telefone"
+                        style={styles.textInput}
+                    />
+                    <TextInput
+                        onChangeText={value => passwordRef.current = value}
+                        secureTextEntry
+                        placeholder="Senha"
+                        style={styles.textInput}
+                    />
                 </View>
-            </TouchableOpacity>
 
-            <View style={styles.buttonContainer}>
-                {
-                    loading ? (
-                        
-                        <Loading style={styles.loading} />
-                        
-                    ) : (
-                        <View style={styles.button}>
-                            <TouchableOpacity onPress={handlePress} >
+                {/* Campo para selecionar a imagem de perfil */}
+                <TouchableOpacity onPress={pickImage}>
+                    <View style={styles.imagePicker}>
+                        {profileImage ? (
+                            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                        ) : (
+                            <Text style={styles.imagePickerText}>Selecionar imagem de perfil</Text>
+                        )}
+                    </View>
+                </TouchableOpacity>
+
+                <View style={styles.buttonContainer}>
+                    {
+                        loading ? (
+
+                            <Loading style={styles.loading} />
+
+                        ) : (
+
+                            <TouchableOpacity onPress={handlePress} style={styles.button}>
                                 <Text style={styles.buttonText}>Cadastrar-se</Text>
                             </TouchableOpacity>
-                        </View>
-                    )
-                }
-            </View> 
-            
-            <View style={styles.bottom}>
-              <Text style={styles.bottomText}>Já possui uma conta? </Text>
-              <Pressable onPress={() => router.push("signIn")}>
-                <Text style={styles.bottomTextSignIn}>Faça seu login.</Text>
-              </Pressable >
+
+                        )
+                    }
+                </View>
+
+                <View style={styles.bottom}>
+                    <Text style={styles.bottomText}>Já possui uma conta? </Text>
+                    <Pressable onPress={() => router.push("signIn")}>
+                        <Text style={styles.bottomTextSignIn}>Faça seu login.</Text>
+                    </Pressable >
+                </View>
             </View>
-        </View>
-      </CustomKeyboardView>
+        </CustomKeyboardView>
     )
 }
 
@@ -185,37 +185,37 @@ const styles = {
         color: '#000000',
     },
     bottom: {
-      flexDirection: 'row',
+        flexDirection: 'row',
         // Estilo adicional, se necessário
     },
     bottomText: {
-      fontSize: hp(1.8),
-      color: '#FFFFFF',
+        fontSize: hp(1.8),
+        color: '#FFFFFF',
     },
     bottomTextSignIn: {
-      fontSize: hp(1.8),
-      color: '#EFC51B',
-      fontWeight: '600',
+        fontSize: hp(1.8),
+        color: '#EFC51B',
+        fontWeight: '600',
     },
     imagePicker: {
-      width: wp('80%'),
-      height: hp('15%'),
-      backgroundColor: '#FFFFFF',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 10,
-      marginBottom: hp('3%'),
-  },
-  imagePickerText: {
-      color: '#000000',
-      fontSize: hp(2),
-      fontWeight: '600',
-  },
-  profileImage: {
-      width: '100%',
-      height: '100%',
-      borderRadius: 10,
-  },
+        width: wp('80%'),
+        height: hp('15%'),
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginBottom: hp('3%'),
+    },
+    imagePickerText: {
+        color: '#000000',
+        fontSize: hp(2),
+        fontWeight: '600',
+    },
+    profileImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 10,
+    },
     loading: {
         // width: wp('20%'),
         // height: hp('10%'), 
