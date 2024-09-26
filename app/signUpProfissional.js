@@ -43,7 +43,7 @@ export default function SignUpProfissional() {
     };
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento || !profileImage) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
@@ -72,8 +72,9 @@ export default function SignUpProfissional() {
         return true;
     }
 
-    const handlePress = () => {
-        if (handleRegister()) {
+    const handlePress = async () => {
+        const success = await handleRegister()
+        if (success) {
             router.push("signUpConfirmation");
         }
     };
