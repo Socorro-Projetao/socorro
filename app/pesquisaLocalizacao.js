@@ -5,7 +5,7 @@ import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 
-export default function pesquisaLocalizacao() {
+export default function PesquisaLocalizacao({ setLocalizacao = () => {}, showBackButton }) {
   const router = useRouter();
 
   const [search, setSearch] = useState('');
@@ -35,22 +35,31 @@ export default function pesquisaLocalizacao() {
       setSuggestions([]);
     }
   };
-
+const handleSuggestionSelect = (suggestion) => {
+  console.log(`Selecionado: ${suggestion}`);
+  setSearch(suggestion);
+  setSuggestions([]);
+  if (setLocalizacao) {
+      setLocalizacao(suggestion); 
+  }
+};
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
-        <AntDesign 
-          name='arrowleft' 
-          size={25} 
-          color='#0F1626' 
+        {showBackButton && (
+          <AntDesign 
+            name='arrowleft' 
+            size={25} 
+            color='#0F1626' 
           onPress={() => router.push("opcoesPesquisa")} 
-          style={styles.iconLeft} 
-        />
+            style={styles.iconLeft} 
+          />
+        )}
         <TextInput
           style={styles.input}
           placeholder='Digite a localização'
-          autoCorrect={false}
-          autoComplete='none'
+          //autoCorrect={false}
+          //autoComplete='none'
           value={search}
           onFocus={() => setIsFocused(true)}  // Quando o campo é focado
           onBlur={() => setIsFocused(false)}  // perde o foco
@@ -80,7 +89,7 @@ export default function pesquisaLocalizacao() {
       <FlatList
         data={suggestions}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.suggestionItem}>
+          <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
             <Text style={styles.suggestionText}>{item}</Text>
           </TouchableOpacity>
         )}
