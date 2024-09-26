@@ -53,7 +53,7 @@ export default function SignUpProfissional() {
     };
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento || !profileImage) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
@@ -81,8 +81,9 @@ export default function SignUpProfissional() {
         return true;
     }
 
-    const handlePress = () => {
-        if (handleRegister()) {  
+    const handlePress = async () => {
+        const success = await handleRegister()
+        if (success) {
             router.push("signUpConfirmation");
         }
     };
@@ -103,8 +104,7 @@ export default function SignUpProfissional() {
             quality: 1,
         });
 
-        if (!pickerResult.canceled)   
- {
+        if (!pickerResult.canceled) {
             setProfileImage(pickerResult.assets[0].uri);
         }
     }
@@ -214,11 +214,10 @@ export default function SignUpProfissional() {
                     {loading ? (
                         <Loading style={styles.loading} />
                     ) : (
-                        <View style={styles.button}>
-                            <TouchableOpacity onPress={handlePress}>
-                                <Text style={styles.buttonText}>Cadastrar-se</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity onPress={handlePress} style={styles.button}>
+                            <Text style={styles.buttonText}>Cadastrar-se</Text>
+                        </TouchableOpacity>
+
                     )}
                 </View>
 

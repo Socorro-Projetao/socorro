@@ -24,7 +24,7 @@ export default function SignIn() {
             router.push("admin");
             return;
         }
-        
+
         setLoading(true);
         const response = await login(emailRef.current, passwordRef.current);
         setLoading(false);
@@ -73,11 +73,11 @@ export default function SignIn() {
                         loading ? (
                             <Loading style={styles.loading} />
                         ) : (
-                            <View style={styles.button}>
-                                <TouchableOpacity onPress={handleLogin}>
-                                    <Text style={styles.buttonText}>Entrar</Text>
-                                </TouchableOpacity>
-                            </View>
+
+                            <TouchableOpacity onPress={handleLogin} style={styles.button}>
+                                <Text style={styles.buttonText}>Entrar</Text>
+                            </TouchableOpacity>
+
                         )
                     }
 
