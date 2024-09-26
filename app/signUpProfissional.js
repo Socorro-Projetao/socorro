@@ -1,4 +1,5 @@
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable, Platform } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import React, { useRef, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -134,12 +135,19 @@ export default function SignUpProfissional() {
                             placeholder="Senha"
                             style={styles.textInput}
                         />
-
-                        <TextInput
+                        <TextInputMask
+                            type={'cel-phone'}
+                            options={{
+                                maskType: 'BRL',
+                                withDDD: true,
+                                dddMask: '(99)'
+                            }}
                             onChangeText={value => setTelefone(value)}
                             placeholder="Telefone"
                             style={styles.textInput}
+                            value={telefone}
                         />
+                        {/* - */}
                         <TextInput
                             onChangeText={value => setinstagram(value)}
                             placeholder="Instagram"
