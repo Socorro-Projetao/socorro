@@ -25,7 +25,7 @@ export default function SignUpProfissional() {
     const [experiencia, setExperiencia] = useState(null);
     const [sexo, setSexo] = useState(null);
     const [telefone, setTelefone] = useState(null);
-    const [instagram, setinstagram] = useState(null);
+    const [instagram, setInstagram] = useState(null);
     const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
@@ -147,9 +147,15 @@ export default function SignUpProfissional() {
                             style={styles.textInput}
                             value={telefone}
                         />
-                        {/* - */}
                         <TextInput
-                            onChangeText={value => setinstagram(value)}
+                            onChangeText={(value) => {
+                                if (!value.startsWith('@')) {
+                                    setInstagram(`@${value.replace('@', '')}`);
+                                } else {
+                                setInstagram(value);
+                                }
+                            }}
+                            value={instagram}
                             placeholder="Instagram"
                             style={styles.textInput}
                         />
