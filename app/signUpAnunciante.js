@@ -70,11 +70,11 @@ export default function signUpAnunciante() {
                             <Loading style={styles.loading} />
 
                         ) : (
-                            <View style={styles.button}>
-                                <TouchableOpacity onPress={handlePress} >
-                                    <Text style={styles.buttonText}>Cadastrar-se</Text>
-                                </TouchableOpacity>
-                            </View>
+
+                            <TouchableOpacity onPress={handlePress} style={styles.button}>
+                                <Text style={styles.buttonText}>Cadastrar-se</Text>
+                            </TouchableOpacity>
+
                         )
                     }
                 </View>

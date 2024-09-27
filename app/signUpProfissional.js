@@ -1,8 +1,8 @@
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable, Platform } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';   
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-import { useRouter } from 'expo-router';   
+import { useRouter } from 'expo-router';
 
 import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
@@ -12,6 +12,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
 import { sexoOpcoes } from './selectSexOptions';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import PesquisaLocalizacao from './pesquisaLocalizacao';
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -33,8 +34,17 @@ export default function SignUpProfissional() {
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const onChangeDataNascimento = (event, selectedDate) => {
+        if (event.type === 'dismissed') {
+            setShowDatePicker(false); 
+            return;
+        }else {
+            const currentDate = selectedDate || dataNascimento;
+            setDataNascimento(currentDate);
+            setShowDatePicker(false); 
+        }
+
         const currentDate = selectedDate || dataNascimento;
-        setShowDatePicker(Platform.OS === 'ios');
+        setShowDatePicker(Platform.OS === 'ios'); 
         setDataNascimento(currentDate);
     };
 
@@ -43,24 +53,24 @@ export default function SignUpProfissional() {
     };
 
     const handleRegister = async () => {
-        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento) {
+        if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento || !profileImage) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
         }
 
         setLoading(true);
         const response = await registerProfessional(
-            emailRef.current, 
-            passwordRef.current, 
-            usernameRef.current, 
-            profileImage, 
-            selectedEspecialidade, 
-            sexo, 
-            telefone, 
-            instagram, 
-            experiencia, 
+            emailRef.current,
+            passwordRef.current,
+            usernameRef.current,
+            profileImage,
+            selectedEspecialidade,
+            sexo,
+            telefone,
+            instagram,
+            experiencia,
             localizacao,
-            dataNascimento 
+            dataNascimento
         );
         setLoading(false);
 
@@ -68,13 +78,13 @@ export default function SignUpProfissional() {
             Alert.alert('Cadastro', response.msg);
             return false;
         }
-        //router.push("signUpConfirmation");
         return true;
     }
 
-    const handlePress = () => {
-        if (handleRegister()) { 
-            router.push("signUpConfirmation"); 
+    const handlePress = async () => {
+        const success = await handleRegister()
+        if (success) {
+            router.push("signUpConfirmation");
         }
     };
 
@@ -88,14 +98,13 @@ export default function SignUpProfissional() {
 
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,   
+            allowsEditing: true,
 
             aspect: [4, 4],
             quality: 1,
         });
 
-        if (!pickerResult.canceled)   
- {
+        if (!pickerResult.canceled) {
             setProfileImage(pickerResult.assets[0].uri);
         }
     }
@@ -134,11 +143,11 @@ export default function SignUpProfissional() {
                         placeholder="Instagram"
                         style={styles.textInput}
                     />
-                    <TextInput
-                        onChangeText={value => setLocalizacao(value)}
-                        placeholder="Localização"
-                        style={styles.textInput}
-                    />
+
+                    {/* Campo de localização com busca */}
+                    <View style={styles.localizacaoContainer}>
+                        <PesquisaLocalizacao setLocalizacao={setLocalizacao} />
+                    </View>
 
                     {/* Campo de Data de Nascimento */}
                     <TouchableOpacity onPress={showDatepicker}>
@@ -205,11 +214,10 @@ export default function SignUpProfissional() {
                     {loading ? (
                         <Loading style={styles.loading} />
                     ) : (
-                        <View style={styles.button}>
-                            <TouchableOpacity onPress={handlePress}>
-                                <Text style={styles.buttonText}>Cadastrar-se</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity onPress={handlePress} style={styles.button}>
+                            <Text style={styles.buttonText}>Cadastrar-se</Text>
+                        </TouchableOpacity>
+
                     )}
                 </View>
 
@@ -229,8 +237,11 @@ const styles = {
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#0F1626',
-        paddingTop: hp('10%'),
-        paddingBottom: hp('10%'),
+        paddingTop: hp('15%'),
+    },
+    localizacaoContainer: {
+        width: wp('80%'),
+        marginBottom: hp('3%'),
     },
     texto: {
         color: '#FFFFFF',
@@ -301,10 +312,7 @@ const styles = {
         fontSize: hp(1.8),
         color: '#EFC51B',
         fontWeight: '600',
-    },
-    loading: {
-        // estilos adicionais se necessário
-    },
+    }
 };
 
 const pickerSelectStyles = {

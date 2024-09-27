@@ -12,7 +12,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
 import { sexoOpcoes } from './selectSexOptions';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import PesquisaLocalizacao from './pesquisaLocalizacao';
 export default function ProfileUpdate() {
   const { user, isAuthenticated, updateUserData } = useAuth();
   const router = useRouter();
@@ -25,6 +25,7 @@ export default function ProfileUpdate() {
   const [telefone, setTelefone] = useState(user?.telefone || "");
   const [instagram, setinstagram] = useState(user?.instagram || "");
   const [localizacao, setLocalizacao] = useState(user?.localizacao || "");
+  const [showLocationSearch, setShowLocationSearch] = useState(false);
 
   // Estado para a data de nascimento
   const [dataNascimento, setDataNascimento] = useState(user?.dataNascimento ? new Date(user.dataNascimento.toDate()) : new Date());
@@ -160,14 +161,20 @@ export default function ProfileUpdate() {
               />
             </View>
 
-            {/* Localização */}
-            <View style={styles.inputs}>
-              <TextInput
-                defaultValue={user.localizacao}
-                onChangeText={value => setLocalizacao(value)}
-                placeholder="Localização"
-                style={styles.textInput}
-              />
+            {/* Campo de Localização */}
+            <View style={styles.localizacaoContainer}>
+              {showLocationSearch ? (
+                <PesquisaLocalizacao setLocalizacao={setLocalizacao} />
+              ) : (
+                <TouchableOpacity onPress={() => setShowLocationSearch(true)}>
+                  <TextInput
+                    value={localizacao}
+                    placeholder="Localização"
+                    style={styles.textInput}
+                    editable={false}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
 
             {/* Selector de sexo */}
@@ -285,6 +292,10 @@ const styles = {
   },
   pickerContainer: {
     width: wp('80%'),
+  },
+  localizacaoContainer: {
+    width: wp('80%'),
+    marginBottom: hp('3%'),
   },
   buttonAtualizar: {
     width: '50%',
