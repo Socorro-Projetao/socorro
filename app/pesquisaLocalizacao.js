@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar, SafeAreaView, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StatusBar, SafeAreaView, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
-export default function PesquisaLocalizacao({ setLocalizacao = () => {}, showBackButton }) {
+export default function PesquisaLocalizacao({ setLocalizacao = () => { }, showBackButton }) {
   const router = useRouter();
 
   const [search, setSearch] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [isFocused, setIsFocused] = useState(false); 
-
+  const [isFocused, setIsFocused] = useState(false);
+  const [profissionais, setProfissionais] = useState([]);
 
   const fetchLocations = async (input) => {
-    const apiKey = 'AIzaSyCxzN0sraj4AJtLGMO0YQr2Kpx6B76HRp8'; 
+    const apiKey = 'AIzaSyCxzN0sraj4AJtLGMO0YQr2Kpx6B76HRp8';
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=geocode&language=pt_BR&components=country:BR&key=${apiKey}`;
 
     try {
@@ -27,45 +28,82 @@ export default function PesquisaLocalizacao({ setLocalizacao = () => {}, showBac
     }
   };
 
+  const fetchProfissionalPorLocalizacao = async (location) => {
+    const db = getFirestore()
+    const professionalsCollection = collection(db, 'professionals')
+    const q = query(professionalsCollection, where('localizacao', '==', location))
+
+    try {
+      const querySnapshot = await getDocs(q)
+      const professionalsList = querySnapshot.docs.map(doc => doc.data())
+      setProfissionais(professionalsList)
+    } catch (error) {
+      console.error('Erro ao buscar profissionais: ', error)
+    }
+  }
+
   const handleSearchChange = (text) => {
     setSearch(text);
     if (text.length > 2) { //busca a partir de 2 caracteres inseridos
-      fetchLocations(text); 
+      fetchLocations(text);
     } else {
       setSuggestions([]);
     }
   };
-const handleSuggestionSelect = (suggestion) => {
-  console.log(`Selecionado: ${suggestion}`);
-  setSearch(suggestion);
-  setSuggestions([]);
-  if (setLocalizacao) {
-      setLocalizacao(suggestion); 
-  }
-};
+  
+  const handleSuggestionSelect = (suggestion) => {
+    console.log(`Selecionado: ${suggestion}`);
+    setSearch(suggestion);
+    setSuggestions([]);
+
+    if (setLocalizacao) {
+      setLocalizacao(suggestion);
+    }
+    fetchProfissionalPorLocalizacao(suggestion)
+  };
+
+  const renderProfessional = ({ item }) => (
+    <TouchableOpacity 
+      style={styles.professionalCard}
+      onPress={() => {
+        // aqui fui eu tentando ver se as informações estavam sendo mandadas certas. E estão
+        console.log('PROFISSIONAL SELECIONADO: ', item)
+        // o problema é q no q seria a próxima tela, as informações aparecem como undefined e não consegui resolver isso
+        router.push({
+        pathname: "detalhesProfissional",
+        params: { profissional: item }  // Passa os dados do profissional selecionado
+        })
+      }}
+    >
+      <Image 
+        source={{ uri: item.profilePicture  }} 
+        style={styles.professionalImage} 
+      />
+      <Text style={styles.professionalName}>{item.username}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
         {showBackButton && (
-          <AntDesign 
-            name='arrowleft' 
-            size={25} 
-            color='#0F1626' 
-          onPress={() => router.push("opcoesPesquisa")} 
-            style={styles.iconLeft} 
+          <AntDesign
+            name='arrowleft'
+            size={25}
+            color='#0F1626'
+            onPress={() => router.push("opcoesPesquisa")}
+            style={styles.iconLeft}
           />
         )}
         <TextInput
           style={styles.input}
           placeholder='Digite a localização'
-          //autoCorrect={false}
-          //autoComplete='none'
           value={search}
           onFocus={() => setIsFocused(true)}  // Quando o campo é focado
           onBlur={() => setIsFocused(false)}  // perde o foco
           onChangeText={handleSearchChange}
         />
-        {search.length === 0 && !isFocused && ( 
+        {search.length === 0 && !isFocused && (
           <AntDesign
             name='search1'
             size={25}
@@ -73,15 +111,15 @@ const handleSuggestionSelect = (suggestion) => {
           />
         )}
         {search.length > 0 && (
-          <AntDesign 
-            name='close' 
-            size={25} 
-            color='#0F1626' 
+          <AntDesign
+            name='close'
+            size={25}
+            color='#0F1626'
             onPress={() => {
               setSearch('');
               setSuggestions([]);
-            }} 
-            style={styles.iconClose} 
+            }}
+            style={styles.iconClose}
           />
         )}
       </View>
@@ -94,6 +132,16 @@ const handleSuggestionSelect = (suggestion) => {
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
+      />
+
+      {/* lista de profissionais */}
+      <FlatList
+        data={profissionais}
+        renderItem={renderProfessional}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={3}  
+        columnWrapperStyle={styles.row}
+        ListEmptyComponent={<Text style={styles.vazio}>Nenhum profissional encontrado</Text>}
       />
     </SafeAreaView>
   );
@@ -125,14 +173,42 @@ const styles = {
   iconClose: {
     marginLeft: wp(2),
   },
-  suggestionItem: {
-    backgroundColor: '#e0e0e0',
-    padding: wp(3),
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
   suggestionText: {
     fontSize: 16,
     color: '#000',
+  },
+  row: {
+    justifyContent: 'space-between',
+    paddingHorizontal: wp(4),
+    marginBottom: wp(3),
+  },
+  professionalCard: {
+    backgroundColor: '#f0f0f0',
+    margin: 4,
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: wp(28),
+  },
+  professionalImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
+  },
+  professionalName: {
+    marginTop: wp(2),
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  flatListContainer: {
+    paddingTop: 0,
+    flexGrow: 1,
+  },
+  vazio: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 };
