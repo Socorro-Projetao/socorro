@@ -1,4 +1,5 @@
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import React, { useRef, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
@@ -86,11 +87,18 @@ export default function SignUpCliente() {
                         placeholder="E-mail"
                         style={styles.textInput}
                     />
-                    <TextInput
-                        onChangeText={value => setTelefone(value)}
-                        placeholder="Telefone"
-                        style={styles.textInput}
-                    />
+                    <TextInputMask
+                            type={'cel-phone'}
+                            options={{
+                                maskType: 'BRL',
+                                withDDD: true,
+                                dddMask: '(99)'
+                            }}
+                            onChangeText={value => setTelefone(value)}
+                            placeholder="Telefone"
+                            style={styles.textInput}
+                            value={telefone}
+                        />
                     <TextInput
                         onChangeText={value => passwordRef.current = value}
                         secureTextEntry

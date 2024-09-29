@@ -1,4 +1,5 @@
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Pressable, Platform } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import React, { useRef, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -7,6 +8,7 @@ import { useRouter } from 'expo-router';
 import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useAuth } from '../context/authContext';
 import RNPickerSelect from 'react-native-picker-select';
 import { especialidades } from './selectOptions';
@@ -23,7 +25,7 @@ export default function SignUpProfissional() {
     const [experiencia, setExperiencia] = useState(null);
     const [sexo, setSexo] = useState(null);
     const [telefone, setTelefone] = useState(null);
-    const [instagram, setinstagram] = useState(null);
+    const [instagram, setInstagram] = useState(null);
     const [localizacao, setLocalizacao] = useState(null);
     const usernameRef = useRef("");
     const emailRef = useRef("");
@@ -35,16 +37,16 @@ export default function SignUpProfissional() {
 
     const onChangeDataNascimento = (event, selectedDate) => {
         if (event.type === 'dismissed') {
-            setShowDatePicker(false); 
+            setShowDatePicker(false);
             return;
-        }else {
+        } else {
             const currentDate = selectedDate || dataNascimento;
             setDataNascimento(currentDate);
-            setShowDatePicker(false); 
+            setShowDatePicker(false);
         }
 
         const currentDate = selectedDate || dataNascimento;
-        setShowDatePicker(Platform.OS === 'ios'); 
+        setShowDatePicker(Platform.OS === 'ios');
         setDataNascimento(currentDate);
     };
 
@@ -111,123 +113,138 @@ export default function SignUpProfissional() {
 
     return (
         <CustomKeyboardView>
-            <View style={styles.container}>
-                <Text style={styles.texto}>Preencha os campos abaixo:</Text>
+            <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+                <View style={styles.container}>
+                    <Text style={styles.texto}>Preencha os campos abaixo:</Text>
 
-                {/* Inputs */}
-                <View style={styles.inputs}>
-                    <TextInput
-                        onChangeText={value => usernameRef.current = value}
-                        placeholder="Nome"
-                        style={styles.textInput}
-                    />
-                    <TextInput
-                        onChangeText={value => emailRef.current = value}
-                        placeholder="E-mail"
-                        style={styles.textInput}
-                    />
-                    <TextInput
-                        onChangeText={value => passwordRef.current = value}
-                        secureTextEntry
-                        placeholder="Senha"
-                        style={styles.textInput}
-                    />
-
-                    <TextInput
-                        onChangeText={value => setTelefone(value)}
-                        placeholder="Telefone"
-                        style={styles.textInput}
-                    />
-                    <TextInput
-                        onChangeText={value => setinstagram(value)}
-                        placeholder="Instagram"
-                        style={styles.textInput}
-                    />
-
-                    {/* Campo de localização com busca */}
-                    <View style={styles.localizacaoContainer}>
-                        <PesquisaLocalizacao setLocalizacao={setLocalizacao} />
-                    </View>
-
-                    {/* Campo de Data de Nascimento */}
-                    <TouchableOpacity onPress={showDatepicker}>
+                    {/* Inputs */}
+                    <View style={styles.inputs}>
                         <TextInput
-                            placeholder="Data de Nascimento"
+                            onChangeText={value => usernameRef.current = value}
+                            placeholder="Nome"
                             style={styles.textInput}
-                            value={dataNascimento.toLocaleDateString()}
-                            editable={false}
                         />
-                    </TouchableOpacity>
-                    {showDatePicker && (
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={dataNascimento}
-                            mode="date"
-                            is24Hour={true}
-                            display="default"
-                            onChange={onChangeDataNascimento}
+                        <TextInput
+                            onChangeText={value => emailRef.current = value}
+                            placeholder="E-mail"
+                            style={styles.textInput}
                         />
-                    )}
-                </View>
+                        <TextInput
+                            onChangeText={value => passwordRef.current = value}
+                            secureTextEntry
+                            placeholder="Senha"
+                            style={styles.textInput}
+                        />
+                        <TextInputMask
+                            type={'cel-phone'}
+                            options={{
+                                maskType: 'BRL',
+                                withDDD: true,
+                                dddMask: '(99)'
+                            }}
+                            onChangeText={value => setTelefone(value)}
+                            placeholder="Telefone"
+                            style={styles.textInput}
+                            value={telefone}
+                        />
+                        <TextInput
+                            onChangeText={(value) => {
+                                if (!value.startsWith('@')) {
+                                    setInstagram(`@${value.replace('@', '')}`);
+                                } else {
+                                setInstagram(value);
+                                }
+                            }}
+                            value={instagram}
+                            placeholder="Instagram"
+                            style={styles.textInput}
+                        />
 
-                {/* Selector de sexo */}
-                <View style={styles.pickerContainer}>
-                    <RNPickerSelect
-                        onValueChange={(value) => setSexo(value)}
-                        placeholder={{ label: "Selecione seu sexo", value: null }}
-                        items={sexoOpcoes}
-                        style={pickerSelectStyles}
-                    />
-                </View>
+                        {/* Campo de localização com busca */}
+                        <View style={styles.localizacaoContainer}>
+                            <PesquisaLocalizacao setLocalizacao={setLocalizacao} />
+                        </View>
 
-                {/* Selector de área */}
-                <View style={styles.pickerContainer}>
-                    <RNPickerSelect
-                        onValueChange={(value) => setselectedEspecialidade(value)}
-                        placeholder={{ label: "Selecione sua especialidade", value: null }}
-                        items={especialidades}
-                        style={pickerSelectStyles}
-                    />
-                </View>
-
-                {/* Campo de experiência */}
-                <View style={styles.inputs}>
-                    <TextInput
-                        onChangeText={value => setExperiencia(value)}
-                        placeholder="Experiência"
-                        style={styles.textInput}
-                    />
-                </View>
-
-                {/* Campo para selecionar a imagem de perfil */}
-                <TouchableOpacity onPress={pickImage}>
-                    <View style={styles.imagePicker}>
-                        {profileImage ? (
-                            <Image source={{ uri: profileImage }} style={styles.profileImage} />
-                        ) : (
-                            <Text style={styles.imagePickerText}>Selecionar imagem de perfil</Text>
+                        {/* Campo de Data de Nascimento */}
+                        <TouchableOpacity onPress={showDatepicker}>
+                            <TextInput
+                                placeholder="Data de Nascimento"
+                                style={styles.textInput}
+                                value={dataNascimento.toLocaleDateString()}
+                                editable={false}
+                            />
+                        </TouchableOpacity>
+                        {showDatePicker && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={dataNascimento}
+                                mode="date"
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChangeDataNascimento}
+                            />
                         )}
                     </View>
-                </TouchableOpacity>
 
-                <View style={styles.buttonContainer}>
-                    {loading ? (
-                        <Loading style={styles.loading} />
-                    ) : (
-                        <TouchableOpacity onPress={handlePress} style={styles.button}>
-                            <Text style={styles.buttonText}>Cadastrar-se</Text>
-                        </TouchableOpacity>
+                    {/* Selector de sexo */}
+                    <View style={styles.pickerContainer}>
+                        <RNPickerSelect
+                            onValueChange={(value) => setSexo(value)}
+                            placeholder={{ label: "Selecione seu sexo", value: null }}
+                            items={sexoOpcoes}
+                            style={pickerSelectStyles}
+                        />
+                    </View>
 
-                    )}
+                    {/* Selector de área */}
+                    <View style={styles.pickerContainer}>
+                        <RNPickerSelect
+                            onValueChange={(value) => setselectedEspecialidade(value)}
+                            placeholder={{ label: "Selecione sua especialidade", value: null }}
+                            items={especialidades}
+                            style={pickerSelectStyles}
+                        />
+                    </View>
+
+                    {/* Campo de experiência */}
+                    <View style={styles.inputs}>
+                        <TextInput
+                            onChangeText={value => setExperiencia(value)}
+                            placeholder="Experiência"
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    {/* Campo para selecionar a imagem de perfil */}
+                    <TouchableOpacity onPress={pickImage}>
+                        <View style={styles.imagePicker}>
+                            {profileImage ? (
+                                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                            ) : (
+                                <Text style={styles.imagePickerText}>Selecionar imagem de perfil</Text>
+                            )}
+                        </View>
+                    </TouchableOpacity>
+
+                    <View style={styles.buttonContainer}>
+                        {loading ? (
+                            <Loading style={styles.loading} />
+                        ) : (
+                            <TouchableOpacity onPress={handlePress} style={styles.button}>
+                                <Text style={styles.buttonText}>Cadastrar-se</Text>
+                            </TouchableOpacity>
+
+                        )}
+                    </View>
+
+                    <View style={styles.bottom}>
+                        <Text style={styles.bottomText}>Já possui uma conta? </Text>
+                        <Pressable onPress={() => router.push("signIn")}>
+                            <Text style={styles.bottomTextSignIn}>Faça seu login.</Text>
+                        </Pressable>
+                    </View>
                 </View>
-
-                <View style={styles.bottom}>
-                    <Text style={styles.bottomText}>Já possui uma conta? </Text>
-                    <Pressable onPress={() => router.push("signIn")}>
-                        <Text style={styles.bottomTextSignIn}>Faça seu login.</Text>
-                    </Pressable>
-                </View>
-            </View>
+            </KeyboardAwareScrollView>
         </CustomKeyboardView>
     );
 }
@@ -238,6 +255,7 @@ const styles = {
         alignItems: 'center',
         backgroundColor: '#0F1626',
         paddingTop: hp('15%'),
+        marginBottom: hp('6%'),
     },
     localizacaoContainer: {
         width: wp('80%'),
