@@ -5,7 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useRouter } from 'expo-router';
 import { getAuth, deleteUser } from 'firebase/auth';
 import { getFirestore, doc, deleteDoc, getDoc } from 'firebase/firestore'; // Adicionei getDoc
-import moment from 'moment'; 
+import moment from 'moment';
 
 export default function ProfileDelete() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -97,15 +97,6 @@ export default function ProfileDelete() {
         {user.role === 'profissional' && (
           <>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Especialidade: </Text>{user.especialidade}
-            </Text>
-            <Text style={styles.label}>
-              <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
-            </Text>
-            <Text style={styles.label}>
-              <Text style={styles.bold}>Sexo: </Text>{user.sexo}
-            </Text>
-            <Text style={styles.label}>
               <Text style={styles.bold}>Instagram: </Text>{user.instagram}
             </Text>
             <Text style={styles.label}>
@@ -113,6 +104,15 @@ export default function ProfileDelete() {
             </Text>
             <Text style={styles.label}>
               <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Sexo: </Text>{user.sexo}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Especialidade: </Text>{user.especialidade}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
             </Text>
           </>
         )}
@@ -127,8 +127,8 @@ export default function ProfileDelete() {
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={handleDelete} style={styles.buttonExcluir}>
-          <Text style={styles.buttonText}>Excluir Perfil</Text>
-        </TouchableOpacity>
+        <Text style={styles.buttonText}>Excluir Perfil</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -151,14 +151,17 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: '100%',
-    alignItems: 'left',
-    marginLeft: hp('15%'),
+    paddingHorizontal: wp('5%'),
+    //alignItems: 'left',
+    //marginLeft: hp('10%'),
     marginBottom: hp('5%'),
   },
   label: {
     fontSize: hp('2%'),
     marginBottom: hp('1%'),
     color: '#fff',
+    flexWrap: 'wrap',
+    width: '100%',
   },
   bold: {
     fontWeight: 'bold',
