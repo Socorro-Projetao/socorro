@@ -13,6 +13,7 @@ import { especialidades } from './selectOptions';
 import { sexoOpcoes } from './selectSexOptions';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import PesquisaLocalizacao from './pesquisaLocalizacao';
+
 export default function ProfileUpdate() {
   const { user, isAuthenticated, updateUserData } = useAuth();
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function ProfileUpdate() {
   const [selectedEspecialidade, setSelectedEspecialidade] = useState(user?.especialidade || "");
   const [experiencia, setExperiencia] = useState(user?.experiencia || "");
   const usernameRef = useRef(user?.username || "");
+  const nomeFantasiaRef = useRef(user?.nomeFantasia || "");
   const [sexo, setSexo] = useState(user?.sexo || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
   const [instagram, setinstagram] = useState(user?.instagram || "");
@@ -38,7 +40,7 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !instagram || !localizacao))) {
+    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !instagram || !localizacao)) || (user.role === 'anunciante' && (!nomeFantasiaRef.current))) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
       return false;
     }
@@ -50,6 +52,8 @@ export default function ProfileUpdate() {
       // Verifica se o usuário está na coleção 'users' ou 'professionals'
       if (user.role === 'profissional') {
         docRef = doc(db, "professionals", user.userId);
+      } else if (user.role === 'anunciante') {
+        docRef = doc(db, "anunciantes", user.userId);
       } else {
         docRef = doc(db, "users", user.userId);
       }
@@ -64,6 +68,7 @@ export default function ProfileUpdate() {
       // Atualiza os dados no Firestore
       await updateDoc(docRef, {
         username: usernameRef.current,
+        nomeFantasia: nomeFantasiaRef.current,
         profilePicture: profileImage || user.profilePicture,
         telefone: telefone,
         ...(user.role === 'profissional' && {
@@ -73,7 +78,11 @@ export default function ProfileUpdate() {
           instagram: instagram,
           localizacao: localizacao,
           dataNascimento: dataNascimentoFirebase,
-        })
+        }),
+        ...(user.role === 'anunciante' && {
+          nomeFantasia: nomeFantasiaRef.current,
+        }),
+        
       });
 
       // Atualiza os dados no AuthContext
@@ -133,131 +142,145 @@ export default function ProfileUpdate() {
         <Text style={styles.texto}>Atualize seus dados abaixo:</Text>
 
         <View style={styles.inputs}>
-          <TextInput
-            defaultValue={user.username}
-            onChangeText={value => usernameRef.current = value}
-            placeholder="Nome"
-            style={styles.textInput}
-          />
-          <TextInput
-            defaultValue={user.telefone}
-            onChangeText={value => setTelefone(value)}
-            placeholder="Telefone"
-            style={styles.textInput}
-          />
-
-        </View>
-
-        {user.role === 'profissional' && (
-          <>
-
-            {/* Instagram */}
-            <View style={styles.inputs}>
+          {user.role === 'anunciante' ? (
+            <>
               <TextInput
-                defaultValue={user.instagram}
-                onChangeText={value => setinstagram(value)}
-                placeholder="Instagram"
+                defaultValue={user.nomeFantasia}
+                onChangeText={value => nomeFantasiaRef.current = value}
+                placeholder="Nome Fantasia"
                 style={styles.textInput}
               />
-            </View>
-
-            {/* Campo de Localização */}
-            <View style={styles.localizacaoContainer}>
-              {showLocationSearch ? (
-                <PesquisaLocalizacao setLocalizacao={setLocalizacao} />
-              ) : (
-                <TouchableOpacity onPress={() => setShowLocationSearch(true)}>
-                  <TextInput
-                    value={localizacao}
-                    placeholder="Localização"
-                    style={styles.textInput}
-                    editable={false}
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-
-            {/* Selector de sexo */}
-            <View style={styles.pickerContainer}>
-              <RNPickerSelect
-                onValueChange={(value) => setSexo(value)}
-                placeholder={{ label: "Selecione seu sexo", value: null }}
-                items={sexoOpcoes}
-                style={pickerSelectStyles}
-                value={sexo}
-              />
-            </View>
-
-            {/* Selector de especialidade */}
-            <View style={styles.pickerContainer}>
-              <RNPickerSelect
-                onValueChange={(value) => setSelectedEspecialidade(value)}
-                placeholder={{ label: "Selecione sua especialidade", value: null }}
-                items={especialidades}
-                style={pickerSelectStyles}
-                value={selectedEspecialidade}
-              />
-            </View>
-
-            <View style={styles.inputs}>
-              <TextInput
-                defaultValue={user.experiencia}
-                onChangeText={value => setExperiencia(value)}
-                placeholder="Experiência"
-                style={styles.textInput}
-              />
-            </View>
-
-            {/* Campo de Data de Nascimento */}
-            <View style={styles.inputs}>
-              <TouchableOpacity onPress={showDatepicker}>
-                <TextInput
-                  placeholder="Data de Nascimento"
-                  style={styles.textInput}
-                  value={dataNascimento.toLocaleDateString()}
-                  editable={false}
-                />
+              <TouchableOpacity onPress={pickImage}>
+                <View style={styles.imagePicker}>
+                  {profileImage ? (
+                    <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                  ) : (
+                    <Text style={styles.imagePickerText}>Selecionar nova imagem de perfil</Text>
+                  )}
+                </View>
               </TouchableOpacity>
-              {showDatePicker && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={dataNascimento}
-                  mode="date"
-                  is24Hour={true}
-                  display="default"
-                  onChange={onChangeDataNascimento}
-                />
-              )}
-            </View>
-
-          </>
-        )}
-
-        <TouchableOpacity onPress={pickImage}>
-          <View style={styles.imagePicker}>
-            {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.profileImage} />
-            ) : (
-              <Text style={styles.imagePickerText}>Selecionar nova imagem de perfil</Text>
-            )}
-          </View>
-        </TouchableOpacity>
-
-        <View>
-          {loading ? (
-            <Loading style={styles.loading} />
+            </>
           ) : (
-            <View style={styles.button}>
-              <TouchableOpacity onPress={() => router.push("profileScreen")} style={styles.buttonVoltar}>
-                <Text style={styles.buttonText}>Voltar</Text>
+            <>
+              <TextInput
+                defaultValue={user.username}
+                onChangeText={value => usernameRef.current = value}
+                placeholder="Nome"
+                style={styles.textInput}
+              />
+              <TextInput
+                defaultValue={user.telefone}
+                onChangeText={value => setTelefone(value)}
+                placeholder="Telefone"
+                style={styles.textInput}
+              />
+              {user.role === 'profissional' && (
+                <>
+                  <TextInput
+                    defaultValue={user.instagram}
+                    onChangeText={value => setinstagram(value)}
+                    placeholder="Instagram"
+                    style={styles.textInput}
+                  />
+
+                  {/* Campo de Localização */}
+                  <View style={styles.localizacaoContainer}>
+                    {showLocationSearch ? (
+                      <PesquisaLocalizacao setLocalizacao={setLocalizacao} />
+                    ) : (
+                      <TouchableOpacity onPress={() => setShowLocationSearch(true)}>
+                        <TextInput
+                          value={localizacao}
+                          placeholder="Localização"
+                          style={styles.textInput}
+                          editable={false}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+
+                  {/* Selector de sexo */}
+                  <View style={styles.pickerContainer}>
+                    <RNPickerSelect
+                      onValueChange={(value) => setSexo(value)}
+                      placeholder={{ label: "Selecione seu sexo", value: null }}
+                      items={sexoOpcoes}
+                      style={pickerSelectStyles}
+                      value={sexo}
+                    />
+                  </View>
+
+                  {/* Selector de especialidade */}
+                  <View style={styles.pickerContainer}>
+                    <RNPickerSelect
+                      onValueChange={(value) => setSelectedEspecialidade(value)}
+                      placeholder={{ label: "Selecione sua especialidade", value: null }}
+                      items={especialidades}
+                      style={pickerSelectStyles}
+                      value={selectedEspecialidade}
+                    />
+                  </View>
+
+                  <View style={styles.inputs}>
+                    <TextInput
+                      defaultValue={user.experiencia}
+                      onChangeText={value => setExperiencia(value)}
+                      placeholder="Experiência"
+                      style={styles.textInput}
+                    />
+                  </View>
+
+                  {/* Campo de Data de Nascimento */}
+                  <View style={styles.inputs}>
+                    <TouchableOpacity onPress={showDatepicker}>
+                      <TextInput
+                        placeholder="Data de Nascimento"
+                        style={styles.textInput}
+                        value={dataNascimento.toLocaleDateString()}
+                        editable={false}
+                      />
+                    </TouchableOpacity>
+                    {showDatePicker && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={dataNascimento}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeDataNascimento}
+                      />
+                    )}
+                  </View>
+                </>
+              )}
+
+              <TouchableOpacity onPress={pickImage}>
+                <View style={styles.imagePicker}>
+                  {profileImage ? (
+                    <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                  ) : (
+                    <Text style={styles.imagePickerText}>Selecionar nova imagem de perfil</Text>
+                  )}
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handlePress} style={styles.buttonAtualizar}>
-                <Text style={styles.buttonText}>Atualizar</Text>
-              </TouchableOpacity>
-            </View>
+            </>
           )}
         </View>
+      </View>
 
+      <View>
+        {loading ? (
+          <Loading style={styles.loading} />
+        ) : (
+          <View style={styles.button}>
+            <TouchableOpacity onPress={() => router.push("profileScreen")} style={styles.buttonVoltar}>
+              <Text style={styles.buttonText}>Voltar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handlePress} style={styles.buttonAtualizar}>
+              <Text style={styles.buttonText}>Atualizar</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </CustomKeyboardView>
   );
