@@ -1,10 +1,11 @@
-import { View, Text, TouchableOpacity, Pressable, TextInput, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Pressable, TextInput, Alert, Image } from 'react-native'
 import React, { useState, useRef } from 'react'
 import { useAuth } from '../context/authContext'
 import { useRouter } from 'expo-router'
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Loading from '../components/Loading';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function signUpAnunciante() {
     const router = useRouter()
@@ -14,15 +15,16 @@ export default function signUpAnunciante() {
     const nomeFantasiaRef = useRef("")
     const emailAnuncianteRef = useRef("")
     const passwordRef = useRef("")
+    const [profileImage, setProfileImage] = useState(null);
 
     const handleRegister = async () => {
-        if (!emailAnuncianteRef.current || !passwordRef.current || !nomeFantasiaRef.current) {
+        if (!emailAnuncianteRef.current || !passwordRef.current || !nomeFantasiaRef.current || !profileImage) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false
         }
         setLoading(true)
 
-        let response = await registerAnunciante(emailAnuncianteRef.current, passwordRef.current, nomeFantasiaRef.current)
+        let response = await registerAnunciante(emailAnuncianteRef.current, passwordRef.current, nomeFantasiaRef.current, profileImage)
         setLoading(false)
 
         if (!response.success) {
@@ -38,6 +40,28 @@ export default function signUpAnunciante() {
             router.push("signUpConfirmation");
         }
     };
+
+    const pickImage = async () => {
+        let result = await ImagePicker.requestCameraPermissionsAsync();
+
+        //solicitar permissão para acessar galeria
+        if (result.granted === false) {
+            Alert.alert("Permissão necessária", "é necessário permitir o acesso à galeria para escolher uma imagem.")
+            return
+        }
+
+        //abrir a galeria
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+        })
+
+        if (!pickerResult.canceled) {
+            setProfileImage(pickerResult.assets[0].uri)
+        }
+    }
 
     return (
         <CustomKeyboardView>
@@ -61,6 +85,15 @@ export default function signUpAnunciante() {
                         placeholder="Senha"
                         style={styles.textInput}
                     />
+                    <TouchableOpacity onPress={pickImage}>
+                    <View style={styles.imagePicker}>
+                        {profileImage ? (
+                            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                        ) : (
+                            <Text style={styles.imagePickerText}>Selecionar imagem de perfil</Text>
+                        )}
+                    </View>
+                </TouchableOpacity>
                 </View>
 
                 <View style={styles.buttonContainer}>
@@ -116,6 +149,25 @@ const styles = {
         color: '#000000',
         borderRadius: 10,
         marginBottom: hp('3%'),
+    },
+    imagePicker: {
+        width: wp('80%'),
+        height: hp('15%'),
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginBottom: hp('3%'),
+    },
+    imagePickerText: {
+        color: '#000000',
+        fontSize: hp(2),
+        fontWeight: '600',
+    },
+    profileImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 10,
     },
     buttonContainer: {
         width: wp('60%'),
