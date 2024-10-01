@@ -1,9 +1,10 @@
-import React, { useState, useEffect, Drawer } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, SectionList } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
+import { getAuth } from 'firebase/auth'; 
+import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
 const data = [
   { id: 1, name: 'João Silva', role: 'Pedreiro', image: require('../../assets/images/icon_perfil.png') },
@@ -35,8 +36,8 @@ const Anuncio = ({ texto }) => (
 
 const Home = () => {
   const router = useRouter();
-
-  // Garante a aleatoriedade dos anuncios
+  const [isUserAllowed, setIsUserAllowed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [randomAnuncio, setRandomAnuncio] = useState([]);
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * publicidade.length);
@@ -44,7 +45,27 @@ const Home = () => {
     setRandomAnuncio(newRandomAnuncio);
   }, []);
 
-  // Dados para a SectionList
+  useEffect(() => {
+    const auth = getAuth();
+    const db = getFirestore();
+    const user = auth.currentUser;
+
+    if (user) {
+      const uid = user.uid;
+      const userDocRef = doc(db, 'users', uid); 
+      getDoc(userDocRef).then((docSnap) => {
+        setIsUserAllowed(docSnap.exists());
+        setLoading(false); 
+      }).catch((error) => {
+        console.error("Error getting user document:", error);
+        setLoading(false); 
+      });
+    } else {
+      setLoading(false); 
+    }
+  }, []);
+
+  
   const sections = [
     {
       title: 'Últimos Contratados',
@@ -88,44 +109,46 @@ const Home = () => {
     }
   };
 
+  if (loading) {
+    return <Text>Carregando...</Text>; 
+  }
+
   return (
-
     <View style={styles.container}>
-      <View style={styles.header}>
-        {/* <Ionicons
-          name="menu"
-          size={25}
-          color='#0F1626'
-          style={styles.menuIcon}
-        /> */}
-        <AntDesign
-          name='search1'
-          size={25}
-          color='#0F1626'
-          style={styles.searchIcon}
-          onPress={() => router.push("opcoesPesquisa")}
-        />
-      </View>
+      {isUserAllowed ? (
+        <>
+          <View style={styles.header}>
+            <AntDesign
+              name='search1'
+              size={25}
+              color='#0F1626'
+              style={styles.searchIcon}
+              onPress={() => router.push("opcoesPesquisa")}
+            />
+          </View>
+          <SectionList
+            sections={sections}
+            keyExtractor={(item, index) => item + index}
+            renderSectionHeader={({ section: { title } }) => {
+              let titleStyle = styles.title;
+              if (title === 'Últimos Contratados' || title === 'Principais Especialidades' || title === 'Anúncios') {
+                titleStyle = styles.title;
+              } else if (title === 'Pedreiro' || title === 'Vidraceiro') {
+                titleStyle = styles.subTitle;
+              }
 
-      <SectionList
-        sections={sections}
-        keyExtractor={(item, index) => item + index}
-        renderSectionHeader={({ section: { title } }) => {
-          let titleStyle = styles.title;
-          if (title === 'Últimos Contratados' || title === 'Principais Especialidades' || title === 'Anúncios'){
-            titleStyle = styles.title;
-          }
-          else if (title === 'Pedreiro' || title === 'Vidraceiro'){
-            titleStyle = styles.subTitle;
-          } 
-
-          return (
-            <Text style={titleStyle}>{title}</Text>
-          )
-        }}        
-        renderItem={renderSection}
-        stickySectionHeadersEnabled={false}
-      />
+              return (
+                <Text style={titleStyle}>{title}</Text>
+              );
+            }}
+            renderItem={renderSection}
+            stickySectionHeadersEnabled={false}
+            contentContainerStyle={{ flexGrow: 1 }} 
+          />
+        </>
+      ) : (
+        <Text style={styles.noAccessText}>Acesso Negado. Você não tem permissão para ver esta página.</Text>
+      )}
     </View>
   );
 };
@@ -185,6 +208,12 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginRight: wp(2),
+  },
+  noAccessText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'red',
+    marginTop: 20,
   },
 });
 
