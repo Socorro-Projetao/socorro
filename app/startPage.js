@@ -5,7 +5,7 @@ import React from 'react'
 export default function StartPage () {
     return(
         <View style={styles.container}>
-            <Image source={require('../../assets/images/logo-SOCORRO.png')}
+            <Image source={require('../assets/images/logo-SOCORRO.png')}
             style={styles.image}/>
         </View>
     )
