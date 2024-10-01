@@ -14,6 +14,7 @@ const MainLayout = () => {
     useEffect(() => {
         if (typeof isAuthenticated == "undefined") return;
         const inApp = segments[0] == "(app)";
+        //router.replace("startPage");
 
         if (isAuthenticated && !inApp) {
             setTimeout(() => {
