@@ -3,7 +3,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuth } from '../context/authContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
-import moment from 'moment'; 
+import moment from 'moment';
+
 export default function ProfileRead() {
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -24,39 +25,51 @@ export default function ProfileRead() {
       )}
 
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>
-          <Text style={styles.bold}>Nome: </Text>{user.username}
-        </Text>
-        <Text style={styles.label}>
-          <Text style={styles.bold}>E-mail: </Text>{user.email}
-        </Text>
-        <Text style={styles.label}>
-          <Text style={styles.bold}>Telefone: </Text>{user.telefone}
-        </Text>
-        
-        
-        {/* Verifica o tipo de usuário e exibe informações específicas */}
-        {user.role === 'profissional' && (
+        {user.role === 'anunciante' ? (
           <>
-             <Text style={styles.label}>
-              <Text style={styles.bold}>Especialidade: </Text>{user.especialidade}
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Nome Fantasia: </Text>{user.nomeFantasia}
             </Text>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
+              <Text style={styles.bold}>E-mail: </Text>{user.email}
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Nome: </Text>{user.username}
             </Text>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Sexo: </Text>{user.sexo}
+              <Text style={styles.bold}>E-mail: </Text>{user.email}
             </Text>
             <Text style={styles.label}>
-              <Text style={styles.bold}>Instagram: </Text>{user.instagram}
-            </Text>
-            <Text style={styles.label}>
-              <Text style={styles.bold}>Localização: </Text>{user.localizacao}
-            </Text>
-            <Text style={styles.label}>
-              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
+              <Text style={styles.bold}>Telefone: </Text>{user.telefone}
             </Text>
 
+
+            {/* Verifica o tipo de usuário e exibe informações específicas */}
+            {user.role === 'profissional' && (
+              <>
+                <Text style={styles.label}>
+                  <Text style={styles.bold}>Instagram: </Text>{user.instagram}
+                </Text>
+                <Text style={styles.label}>
+                  <Text style={styles.bold}>Localização: </Text>{user.localizacao}
+                </Text>
+                <Text style={styles.label}>
+                  <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
+                </Text>
+                <Text style={styles.label}>
+                  <Text style={styles.bold}>Sexo: </Text>{user.sexo}
+                </Text>
+                <Text style={styles.label}>
+                  <Text style={styles.bold}>Especialidade: </Text>{user.especialidade}
+                </Text>
+                <Text style={styles.label}>
+                  <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
+                </Text>
+              </>
+            )}
           </>
         )}
       </View>
@@ -104,8 +117,8 @@ const styles = StyleSheet.create({
     marginBottom: hp('3%'),
   },
   buttonContainer: {
-    flexDirection: 'row', 
-    justifyContent: 'space-around', 
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     width: '80%',
   },
   buttonEditar: {

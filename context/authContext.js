@@ -63,7 +63,22 @@ export const AuthContextProvider = ({ children }) => {
                     role: 'profissional' // Definindo como profissional se encontrado na coleção 'professionals'
                 });
             } else {
-                //console.error("Usuário não encontrado nas coleções 'users' ou 'professionals'.");
+                docRef = doc(db, "anunciantes", userId);
+                docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    let data = docSnap.data();
+                    setUser({
+                        ...user,
+                        email: auth.currentUser.email,
+                        nomeFantasia: data.nomeFantasia,
+                        profilePicture: data.profilePicture,
+                        userId: data.userId,
+                        role: 'anunciante',
+                    });
+                } else {
+                    console.error("Usuário não encontrado nas coleções 'users', 'professionals' ou 'anunciantes'.");
+                }
             }
         }
     };
@@ -160,13 +175,14 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerAnunciante = async (email, password, nomeFantasia) => {
+    const registerAnunciante = async (email, password, nomeFantasia, profilePicture) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
     
             await setDoc(doc(db, "anunciantes", response?.user?.uid), {
                 nomeFantasia,
+                profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
             });
             
@@ -181,6 +197,18 @@ export const AuthContextProvider = ({ children }) => {
             return { success: false, msg };
         }
     }
+
+    const updateAnuncianteData = async (userId, newData) => {
+        try {
+            const anuncianteRef = doc(db, "anunciantes", userId);
+            await updateDoc(anuncianteRef, newData);
+            updateUserData(userId); // Atualiza o estado do usuário com os novos dados
+            return { success: true };
+        } catch (e) {
+            console.error("Erro ao atualizar anunciante: ", e.message);
+            return { success: false, msg: e.message };
+        }
+    };
 
     const resetPassword = async (email) => {
         try {
@@ -201,7 +229,7 @@ export const AuthContextProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, registerAnunciante, updateUserData, resetPassword  }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, registerAnunciante, updateAnuncianteData,updateUserData, resetPassword  }}>
             {children}
         </AuthContext.Provider>
     )
