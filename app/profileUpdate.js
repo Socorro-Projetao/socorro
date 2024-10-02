@@ -68,7 +68,6 @@ export default function ProfileUpdate() {
       // Atualiza os dados no Firestore
       await updateDoc(docRef, {
         username: usernameRef.current,
-        nomeFantasia: nomeFantasiaRef.current,
         profilePicture: profileImage || user.profilePicture,
         telefone: telefone,
         ...(user.role === 'profissional' && {
