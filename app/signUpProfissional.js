@@ -43,8 +43,7 @@ export default function SignUpProfissional() {
 
     const fetchLocations = async (input) => {
         const apiKey = 'AIzaSyCxzN0sraj4AJtLGMO0YQr2Kpx6B76HRp8';
-        const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=(cities)&language=pt_BR&components=country:BR&key=${apiKey}`;
-
+        const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=geocode&language=pt_BR&components=country:BR&key=${apiKey}`;
         try {
             const response = await axios.get(url);
             if (response.data.status === 'OK') {
