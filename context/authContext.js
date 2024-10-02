@@ -36,10 +36,8 @@ export const AuthContextProvider = ({ children }) => {
                 username: data.username,
                 profilePicture: data.profilePicture,
                 userId: data.userId,
-                especialidade: data.especialidade,
-                experiencia: data.experiencia,
                 telefone: data.telefone,
-                role: 'cliente' // Definindo como cliente se encontrado na coleção 'users'
+                role: 'user'
             });
         } else {
             docRef = doc(db, "professionals", userId);
@@ -85,15 +83,15 @@ export const AuthContextProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await signInWithEmailAndPassword(auth, email, password );
+            const response = await signInWithEmailAndPassword(auth, email, password);
             console.log('Usuário logado: ', response?.user);
-            return { success: true};
+            return { success: true };
         } catch (e) {
             let msg = e.message;
 
             // Mensagens de erro customizadas
-            if(msg.includes('auth/invalid-email')) msg = "E-mail inválido";
-            if(msg.includes('auth/invalid-credential')) msg = "Credenciais inválidas";
+            if (msg.includes('auth/invalid-email')) msg = "E-mail inválido";
+            if (msg.includes('auth/invalid-credential')) msg = "Credenciais inválidas";
 
             console.error("Erro ao logar usuário: ", msg); // Adiciona logs de erro
 
@@ -106,7 +104,7 @@ export const AuthContextProvider = ({ children }) => {
             await signOut(auth);
             return { success: true };
         } catch (e) {
-            return { success: false, msg: e.message, error: e};
+            return { success: false, msg: e.message, error: e };
         }
     }
 
@@ -115,7 +113,7 @@ export const AuthContextProvider = ({ children }) => {
             // Cria o usuário com e-mail e senha
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
-    
+
             // Configura o documento no Firestore
             await setDoc(doc(db, "users", response?.user?.uid), {
                 username,
@@ -123,16 +121,16 @@ export const AuthContextProvider = ({ children }) => {
                 userId: response?.user?.uid,
                 telefone
             });
-            
+
             return { success: true, data: response?.user };
         } catch (e) {
             let msg = e.message;
-            
+
             // Mensagens de erro customizadas
-            if(msg.includes('auth/invalid-email')) msg = "E-mail inválido";
-            
+            if (msg.includes('auth/invalid-email')) msg = "E-mail inválido";
+
             console.error("Erro ao registrar usuário: ", msg); // Adiciona logs de erro
-            
+
             return { success: false, msg };
         }
     }
@@ -144,11 +142,11 @@ export const AuthContextProvider = ({ children }) => {
 
 
             const sdataNascimento = new Date(
-                dataNascimento.getFullYear(), 
-                dataNascimento.getMonth(), 
+                dataNascimento.getFullYear(),
+                dataNascimento.getMonth(),
                 dataNascimento.getDate()
             );
-        
+
 
             await setDoc(doc(db, "professionals", response?.user?.uid), {
                 username,
@@ -179,21 +177,21 @@ export const AuthContextProvider = ({ children }) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Usuário criado: ', response?.user);
-    
+
             await setDoc(doc(db, "anunciantes", response?.user?.uid), {
                 nomeFantasia,
                 profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
             });
-            
+
             return { success: true, data: response?.user };
         } catch (e) {
             let msg = e.message;
-            
-            if(msg.includes('auth/invalid-email')) msg = "E-mail inválido";
-            
-            console.error("Erro ao registrar anunciante: ", msg); 
-            
+
+            if (msg.includes('auth/invalid-email')) msg = "E-mail inválido";
+
+            console.error("Erro ao registrar anunciante: ", msg);
+
             return { success: false, msg };
         }
     }
@@ -229,7 +227,7 @@ export const AuthContextProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, registerAnunciante, updateAnuncianteData,updateUserData, resetPassword  }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, register, registerProfessional, registerAnunciante, updateAnuncianteData, updateUserData, resetPassword }}>
             {children}
         </AuthContext.Provider>
     )

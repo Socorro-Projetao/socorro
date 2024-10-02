@@ -40,8 +40,16 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !instagram || !localizacao)) || (user.role === 'anunciante' && (!nomeFantasiaRef.current))) {
-      Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
+    const isFormValid = (
+
+      ((user.role === 'profissional' || usernameRef.current || telefone || selectedEspecialidade || experiencia || sexo || instagram | localizacao) ||
+        (user.role === 'anunciante' || nomeFantasiaRef.current !== user.nomeFantasia || profileImage !== user.profilePicture) ||
+        (user.role === 'user' || usernameRef.current || telefone)
+      )
+    );
+
+    if (!isFormValid) {
+      Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos obrigatórios!');
       return false;
     }
     setLoading(true);
@@ -67,11 +75,15 @@ export default function ProfileUpdate() {
 
       // Atualiza os dados no Firestore
       await updateDoc(docRef, {
-        username: usernameRef.current,
-        nomeFantasia: nomeFantasiaRef.current,
-        profilePicture: profileImage || user.profilePicture,
-        telefone: telefone,
+        ...(user.role === 'user' && {
+          username: usernameRef.current,
+          profilePicture: profileImage || user.profilePicture,
+          telefone: telefone,
+        }),
         ...(user.role === 'profissional' && {
+          username: usernameRef.current,
+          profilePicture: profileImage || user.profilePicture,
+          telefone: telefone,
           especialidade: selectedEspecialidade,
           experiencia: experiencia,
           sexo: sexo,
@@ -81,10 +93,9 @@ export default function ProfileUpdate() {
         }),
         ...(user.role === 'anunciante' && {
           nomeFantasia: nomeFantasiaRef.current,
+          profilePicture: profileImage || user.profilePicture,
         }),
-        
       });
-
       // Atualiza os dados no AuthContext
       await updateUserData(user.userId);
 
