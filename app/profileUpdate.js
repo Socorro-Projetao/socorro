@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../components/Loading';
@@ -25,7 +26,7 @@ export default function ProfileUpdate() {
   const nomeFantasiaRef = useRef(user?.nomeFantasia || "");
   const [sexo, setSexo] = useState(user?.sexo || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
-  const [instagram, setinstagram] = useState(user?.instagram || "");
+  const [instagram, setInstagram] = useState(user?.instagram || "");
   const [localizacao, setLocalizacao] = useState(user?.localizacao || "");
   const [showLocationSearch, setShowLocationSearch] = useState(false);
 
@@ -179,20 +180,38 @@ export default function ProfileUpdate() {
                 placeholder="Nome"
                 style={styles.textInput}
               />
-              <TextInput
-                defaultValue={user.telefone}
+              <TextInputMask
+                type={'cel-phone'}
+                options={{
+                  maskType: 'BRL',
+                  withDDD: true,
+                  dddMask: '(99)'
+                }}
                 onChangeText={value => setTelefone(value)}
                 placeholder="Telefone"
                 style={styles.textInput}
+                value={telefone}
               />
               {user.role === 'profissional' && (
                 <>
                   <TextInput
+                    onChangeText={(value) => {
+                      if (!value.startsWith('@')) {
+                        setInstagram(`@${value.replace('@', '')}`);
+                      } else {
+                        setInstagram(value);
+                      }
+                    }}
+                    value={instagram}
+                    placeholder="Instagram"
+                    style={styles.textInput}
+                  />
+                  {/* <TextInput
                     defaultValue={user.instagram}
                     onChangeText={value => setinstagram(value)}
                     placeholder="Instagram"
                     style={styles.textInput}
-                  />
+                  /> */}
 
                   {/* Campo de Localização */}
                   <View style={styles.localizacaoContainer}>
@@ -232,6 +251,7 @@ export default function ProfileUpdate() {
                     />
                   </View>
 
+                  {/* Selector de experiência */}
                   <View style={styles.inputs}>
                     <TextInput
                       defaultValue={user.experiencia}

@@ -54,15 +54,23 @@ export default function ProfileDelete() {
                   if (professionalDoc.exists()) {
                     await deleteDoc(professionalDocRef);
                   } else {
-                    console.log('Usuário não encontrado em nenhuma coleção.');
-                    throw new Error('Usuário não encontrado nas coleções.');
+                    // 3. Excluir o documento do usuário da coleção 'anunciantes'
+                    const anuncianteDocRef = doc(db, 'anunciantes', userId);
+                    const anuncianteDoc = await getDoc(anuncianteDocRef);
+
+                    if (anuncianteDoc.exists()) {
+                      await deleteDoc(anuncianteDocRef);
+                    } else {
+                      console.log('Usuário não encontrado em nenhuma coleção.');
+                      throw new Error('Usuário não encontrado nas coleções.');
+                    }
                   }
                 }
 
-                // 3. Excluir o usuário do Firebase Authentication
+                // 4. Excluir o usuário do Firebase Authentication
                 await deleteUser(userToDelete);
 
-                // 4. Fazer logout e redirecionar para a tela de login
+                // 5. Fazer logout e redirecionar para a tela de login
                 logout();
                 router.push('/signIn');
               }
