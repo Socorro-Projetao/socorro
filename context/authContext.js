@@ -176,7 +176,7 @@ export const AuthContextProvider = ({ children }) => {
     const registerAnunciante = async (email, password, nomeFantasia, profilePicture) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log('Usuário criado: ', response?.user);
+            console.log('Usuário criado: ', response?.user); 
 
             await setDoc(doc(db, "anunciantes", response?.user?.uid), {
                 nomeFantasia,
