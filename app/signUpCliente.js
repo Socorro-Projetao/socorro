@@ -225,7 +225,7 @@ const styles = {
         borderRadius: 10,
     },
     loading: {
-        // width: wp('20%'),
-        // height: hp('10%'), 
+        width: wp('20%'),
+        height: hp('10%'), 
     },
 }

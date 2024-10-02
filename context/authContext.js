@@ -74,9 +74,9 @@ export const AuthContextProvider = ({ children }) => {
                         userId: data.userId,
                         role: 'anunciante',
                     });
-                } else {
+                } /*else {
                     console.error("Usuário não encontrado nas coleções 'users', 'professionals' ou 'anunciantes'.");
-                }
+                }*/
             }
         }
     };
