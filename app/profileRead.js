@@ -17,7 +17,6 @@ export default function ProfileRead() {
     return <Text>Usuário não logado</Text>;
   }
 
-
   return (
     <View style={styles.container}>
       {user.profilePicture && (
@@ -25,16 +24,8 @@ export default function ProfileRead() {
       )}
 
       <View style={styles.infoContainer}>
-        {user.role === 'anunciante' ? (
-          <>
-            <Text style={styles.label}>
-              <Text style={styles.bold}>Nome Fantasia: </Text>{user.nomeFantasia}
-            </Text>
-            <Text style={styles.label}>
-              <Text style={styles.bold}>E-mail: </Text>{user.email}
-            </Text>
-          </>
-        ) : (
+        {/* Condições pra profissional */}
+        {user.role === 'profissional' && (
           <>
             <Text style={styles.label}>
               <Text style={styles.bold}>Nome: </Text>{user.username}
@@ -45,31 +36,48 @@ export default function ProfileRead() {
             <Text style={styles.label}>
               <Text style={styles.bold}>Telefone: </Text>{user.telefone}
             </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Instagram: </Text>{user.instagram}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Localização: </Text>{user.localizacao}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Sexo: </Text>{user.sexo}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Especialidade: </Text>{user.especialidade}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
+            </Text>
+          </>
+        )}
 
+        {/* Pra anunciante */}
+        {user.role === 'anunciante' && (
+          <>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Nome Fantasia: </Text>{user.nomeFantasia}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>E-mail: </Text>{user.email}
+            </Text>
+          </>
+        )}
 
-            {/* Verifica o tipo de usuário e exibe informações específicas */}
-            {user.role === 'profissional' && (
-              <>
-                <Text style={styles.label}>
-                  <Text style={styles.bold}>Instagram: </Text>{user.instagram}
-                </Text>
-                <Text style={styles.label}>
-                  <Text style={styles.bold}>Localização: </Text>{user.localizacao}
-                </Text>
-                <Text style={styles.label}>
-                  <Text style={styles.bold}>Data de Nascimento: </Text>{moment(user.dataNascimento.toDate()).format('DD/MM/YYYY')}
-                </Text>
-                <Text style={styles.label}>
-                  <Text style={styles.bold}>Sexo: </Text>{user.sexo}
-                </Text>
-                <Text style={styles.label}>
-                  <Text style={styles.bold}>Especialidade: </Text>{user.especialidade}
-                </Text>
-                <Text style={styles.label}>
-                  <Text style={styles.bold}>Experiência: </Text>{user.experiencia}
-                </Text>
-              </>
-            )}
+        {/* Pra cliente */}
+        {user.role !== 'profissional' && user.role !== 'anunciante' && (
+          <>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Nome: </Text>{user.username}
+            </Text>
+            <Text style={styles.label}>
+              <Text style={styles.bold}>Telefone: </Text>{user.telefone}
+            </Text>
           </>
         )}
       </View>
@@ -82,7 +90,7 @@ export default function ProfileRead() {
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </View >
   );
 }
 
