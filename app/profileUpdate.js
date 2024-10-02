@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import Loading from '../components/Loading';
@@ -25,7 +26,7 @@ export default function ProfileUpdate() {
   const nomeFantasiaRef = useRef(user?.nomeFantasia || "");
   const [sexo, setSexo] = useState(user?.sexo || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
-  const [instagram, setinstagram] = useState(user?.instagram || "");
+  const [instagram, setInstagram] = useState(user?.instagram || "");
   const [localizacao, setLocalizacao] = useState(user?.localizacao || "");
   const [showLocationSearch, setShowLocationSearch] = useState(false);
 
@@ -40,8 +41,16 @@ export default function ProfileUpdate() {
   }, [isAuthenticated]);
 
   const handleUpdate = async () => {
-    if (!usernameRef.current || !telefone || (user.role === 'profissional' && (!selectedEspecialidade || !experiencia || !sexo || !instagram || !localizacao)) || (user.role === 'anunciante' && (!nomeFantasiaRef.current))) {
-      Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos!');
+    const isFormValid = (
+
+      ((user.role === 'profissional' || usernameRef.current || telefone || selectedEspecialidade || experiencia || sexo || instagram | localizacao) ||
+        (user.role === 'anunciante' || nomeFantasiaRef.current !== user.nomeFantasia || profileImage !== user.profilePicture) ||
+        (user.role === 'user' || usernameRef.current || telefone)
+      )
+    );
+
+    if (!isFormValid) {
+      Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos obrigatórios!');
       return false;
     }
     setLoading(true);
@@ -67,11 +76,15 @@ export default function ProfileUpdate() {
 
       // Atualiza os dados no Firestore
       await updateDoc(docRef, {
-        username: usernameRef.current,
-        nomeFantasia: nomeFantasiaRef.current,
-        profilePicture: profileImage || user.profilePicture,
-        telefone: telefone,
+        ...(user.role === 'user' && {
+          username: usernameRef.current,
+          profilePicture: profileImage || user.profilePicture,
+          telefone: telefone,
+        }),
         ...(user.role === 'profissional' && {
+          username: usernameRef.current,
+          profilePicture: profileImage || user.profilePicture,
+          telefone: telefone,
           especialidade: selectedEspecialidade,
           experiencia: experiencia,
           sexo: sexo,
@@ -81,10 +94,9 @@ export default function ProfileUpdate() {
         }),
         ...(user.role === 'anunciante' && {
           nomeFantasia: nomeFantasiaRef.current,
+          profilePicture: profileImage || user.profilePicture,
         }),
-        
       });
-
       // Atualiza os dados no AuthContext
       await updateUserData(user.userId);
 
@@ -168,20 +180,38 @@ export default function ProfileUpdate() {
                 placeholder="Nome"
                 style={styles.textInput}
               />
-              <TextInput
-                defaultValue={user.telefone}
+              <TextInputMask
+                type={'cel-phone'}
+                options={{
+                  maskType: 'BRL',
+                  withDDD: true,
+                  dddMask: '(99)'
+                }}
                 onChangeText={value => setTelefone(value)}
                 placeholder="Telefone"
                 style={styles.textInput}
+                value={telefone}
               />
               {user.role === 'profissional' && (
                 <>
                   <TextInput
+                    onChangeText={(value) => {
+                      if (!value.startsWith('@')) {
+                        setInstagram(`@${value.replace('@', '')}`);
+                      } else {
+                        setInstagram(value);
+                      }
+                    }}
+                    value={instagram}
+                    placeholder="Instagram"
+                    style={styles.textInput}
+                  />
+                  {/* <TextInput
                     defaultValue={user.instagram}
                     onChangeText={value => setinstagram(value)}
                     placeholder="Instagram"
                     style={styles.textInput}
-                  />
+                  /> */}
 
                   {/* Campo de Localização */}
                   <View style={styles.localizacaoContainer}>
@@ -221,6 +251,7 @@ export default function ProfileUpdate() {
                     />
                   </View>
 
+                  {/* Selector de experiência */}
                   <View style={styles.inputs}>
                     <TextInput
                       defaultValue={user.experiencia}
