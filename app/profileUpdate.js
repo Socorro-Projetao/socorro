@@ -421,10 +421,6 @@ const styles = {
   pickerContainer: {
     width: wp('80%'),
   },
-  localizacaoContainer: {
-    width: wp('80%'),
-    marginBottom: hp('3%'),
-  },
   buttonAtualizar: {
     width: '50%',
     backgroundColor: '#EFC51B',
