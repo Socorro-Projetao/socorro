@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useLocalSearchParams, useRouter} from 'expo-router';
 
@@ -9,6 +9,12 @@ export default function DetalhesProfissional() {
     const { profissional } = useLocalSearchParams();
     const professionalData = profissional ? JSON.parse(profissional) : null;
     console.log("Profile Picture URI: ", professionalData.profilePicture);
+
+    const handlePhone = (telefone) => {
+        const telefoneFormatado = telefone.replace(/[^\d]/g, ''); // retira os caracteres especiais
+        const whatsappUrl = `https://wa.me/${telefoneFormatado}`;
+        Linking.openURL(whatsappUrl);
+    }
 
     return (
         <View style={styles.container}>
@@ -22,9 +28,11 @@ export default function DetalhesProfissional() {
                         <Text style={styles.bold}>Nome: </Text>{professionalData.username}
                     </Text>
 
-                    <Text style={styles.label}>
-                        <Text style={styles.bold}>Telefone: </Text>{professionalData.telefone}
-                    </Text>
+                    <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
+                        <Text style={[styles.label, styles.link]}>
+                            <Text style={styles.bold}>Telefone (WhatsApp): </Text>{professionalData.telefone}
+                        </Text>
+                    </TouchableOpacity>
 
                     <Text style={styles.label}>
 
