@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
+        alignItems: 'flex-start',
+        padding: 30,
     },
     label: {
         fontSize: 20,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        width: '80%',
+        width: '100%',
     },
     buttonText: {
         fontSize: hp(2.5),
