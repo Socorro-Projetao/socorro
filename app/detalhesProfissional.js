@@ -12,10 +12,14 @@ export default function DetalhesProfissional() {
 
     const handlePhone = (telefone) => {
         const telefoneFormatado = telefone.replace(/[^\d]/g, ''); // retira os caracteres especiais
-        const whatsappUrl = `https://wa.me/${telefoneFormatado}`;
+        const whatsappUrl = `https://wa.me/55${telefoneFormatado}`;
         Linking.openURL(whatsappUrl);
     }
 
+    const handleInstagram = (instagram) => {
+        const instagramUrl = `https://www.instagram.com/${instagram.replace('@', '')}`
+        Linking.openURL(instagramUrl)
+    }
     return (
         <View style={styles.container}>
             {professionalData ? (
@@ -28,24 +32,20 @@ export default function DetalhesProfissional() {
                         <Text style={styles.bold}>Nome: </Text>{professionalData.username}
                     </Text>
 
-                    {/* <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
-                        <Text style={styles.label}>
-                            <Text style={styles.bold}>Telefone (WhatsApp): </Text>{professionalData.telefone}
-                        </Text>
-                    </TouchableOpacity> */}
-
-                    <View style={styles.phoneContainer}>
+                    <View style={styles.phoneInstagramContainer}>
                         <Text style={styles.bold}>Telefone (WhatsApp): </Text>
                         <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
-                            <Text style={styles.link}>{professionalData.telefone}</Text>
+                            <Text style={[styles.bold, styles.link]}>{professionalData.telefone}</Text>
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={styles.label}>
+                    <View style={styles.phoneInstagramContainer}>
+                        <Text style={styles.bold}>Instagram: </Text>
+                        <TouchableOpacity onPress={() => handleInstagram(professionalData.instagram)}>
+                            <Text style={[styles.bold, styles.linkInstagram]}>{professionalData.instagram}</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                        <Text style={styles.bold}>Instagram: </Text>{professionalData.instagram}
-
-                    </Text>
                     <Text style={styles.label}>
 
                         <Text style={styles.bold}>Localização: </Text>{professionalData.localizacao}
@@ -75,8 +75,6 @@ export default function DetalhesProfissional() {
                 </TouchableOpacity>
             </View>
         </View>
-
-
     );
 }
 
@@ -96,10 +94,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     link: {
-        fontSize: 20,
-        color: 'blue',
+        color: '#25D366',
     },
-    phoneContainer: {
+    linkInstagram: {
+        fontSize: 20,
+        color: '#B3279A',
+    },
+    phoneInstagramContainer: {
         flexDirection: 'row',
         alignItems: 'center',  // Garante que o texto e o link estejam alinhados verticalmente
         marginBottom: hp('3%'),
