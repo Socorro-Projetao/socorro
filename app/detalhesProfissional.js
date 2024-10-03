@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useLocalSearchParams, useRouter} from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function DetalhesProfissional() {
     const router = useRouter();
@@ -28,11 +28,18 @@ export default function DetalhesProfissional() {
                         <Text style={styles.bold}>Nome: </Text>{professionalData.username}
                     </Text>
 
-                    <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
-                        <Text style={[styles.label, styles.link]}>
+                    {/* <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
+                        <Text style={styles.label}>
                             <Text style={styles.bold}>Telefone (WhatsApp): </Text>{professionalData.telefone}
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+
+                    <View style={styles.phoneContainer}>
+                        <Text style={styles.bold}>Telefone (WhatsApp): </Text>
+                        <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
+                            <Text style={styles.link}>{professionalData.telefone}</Text>
+                        </TouchableOpacity>
+                    </View>
 
                     <Text style={styles.label}>
 
@@ -85,7 +92,17 @@ const styles = StyleSheet.create({
         marginBottom: hp('3%'),
     },
     bold: {
+        fontSize: 20,
         fontWeight: 'bold',
+    },
+    link: {
+        fontSize: 20,
+        color: 'blue',
+    },
+    phoneContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',  // Garante que o texto e o link estejam alinhados verticalmente
+        marginBottom: hp('3%'),
     },
     profilePicture: {
         width: 100,
@@ -113,5 +130,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-      },
+    },
 })
