@@ -421,10 +421,6 @@ const styles = {
   pickerContainer: {
     width: wp('80%'),
   },
-  localizacaoContainer: {
-    width: wp('80%'),
-    marginBottom: hp('3%'),
-  },
   buttonAtualizar: {
     width: '50%',
     backgroundColor: '#EFC51B',
@@ -440,12 +436,13 @@ const styles = {
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: wp('8%'),
+    marginRight: wp('5%'),
   },
   button: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '80%',
+    marginLeft: wp('10%'),
   },
   buttonText: {
     fontSize: hp(2.5),
