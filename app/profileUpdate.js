@@ -440,12 +440,12 @@ const styles = {
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: wp('8%'),
   },
   button: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '80%',
+    marginLeft: wp('10%'),
   },
   buttonText: {
     fontSize: hp(2.5),
