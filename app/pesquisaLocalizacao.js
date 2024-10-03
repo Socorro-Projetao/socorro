@@ -174,6 +174,8 @@ const styles = {
   suggestionText: {
     fontSize: 16,
     color: '#000',
+    paddingLeft: 20
+
   },
   row: {
     justifyContent: 'space-between',
