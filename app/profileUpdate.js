@@ -440,6 +440,7 @@ const styles = {
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: wp('5%'),
   },
   button: {
     flexDirection: 'row',
