@@ -55,7 +55,7 @@ export default function DetalhesProfissional() {
                 <Text>Erro ao carregar os dados do profissional.</Text>
             )}
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => router.push("opcoesPesquisa")} style={styles.buttonVoltar}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.buttonVoltar}>
                     <Text style={styles.buttonText}>Voltar</Text>
                 </TouchableOpacity>
             </View>
