@@ -66,17 +66,15 @@ export default function PesquisaLocalizacao({ setLocalizacao }) {
     <TouchableOpacity 
       style={styles.professionalCard}
       onPress={() => {
-        // aqui fui eu tentando ver se as informações estavam sendo mandadas certas. E estão
-        console.log('PROFISSIONAL SELECIONADO: ', item)
-        // o problema é q no q seria a próxima tela, as informações aparecem como undefined e não consegui resolver isso
+        console.log('PROFISSIONAL SELECIONADO: ', item);
         router.push({
-        pathname: "detalhesProfissional",
-        params: { profissional: item }  // Passa os dados do profissional selecionado
-        })
+          pathname: "detalhesProfissional",
+          params: { profissional: JSON.stringify(item) },
+        });
       }}
     >
       <Image 
-        source={{ uri: item.profilePicture  }} 
+        source={{ uri: item.profilePicture }} 
         style={styles.professionalImage} 
       />
       <Text style={styles.professionalName}>{item.username}</Text>
