@@ -14,7 +14,7 @@ export default function pesquisaProfissional() {
   const [isFocused, setIsFocused] = useState(false);
 
   const filteredSuggestions = suggestions.filter(item =>
-    item.toLowerCase().includes(search.toLowerCase())
+    item.username.toLowerCase().includes(search.toLowerCase())
   );
 
   // função para buscar profissionais
@@ -24,16 +24,20 @@ export default function pesquisaProfissional() {
       return
     }
 
-    const q = query(collection(db, 'professionals'))
+    const q = query(collection(db, 'professionals'), where('username', '>=', searchTerm), where('username', '<=', searchTerm + '\uf8ff'));
 
-    const querySnapshot = await getDocs(q)
-    const professionalsList = querySnapshot.docs.map((doc) => doc.data().username)
+    const querySnapshot = await getDocs(q);
+    const professionalsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    const filteredList = professionalsList.filter((username) => username.toLowerCase().includes(searchTerm.toLowerCase()))
-
-    setSuggestions(filteredList)
+    setSuggestions(professionalsList);
   }
 
+  const handleSuggestionPress = (professional) => {
+    router.push({
+      pathname: 'detalhesProfissional',
+      params: { profissional: JSON.stringify(professional) },
+    });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,11 +86,11 @@ export default function pesquisaProfissional() {
         <FlatList
           data={filteredSuggestions}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.suggestionItem}>
-              <Text style={styles.suggestionText}>{item}</Text>
+            <TouchableOpacity style={styles.suggestionItem} onPress={() => handleSuggestionPress(item)}>
+              <Text style={styles.suggestionText}>{item.username}</Text>
             </TouchableOpacity>
           )}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item.id}
         />
       )}
     </SafeAreaView>
