@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useLocalSearchParams, useRouter} from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function DetalhesProfissional() {
     const router = useRouter();
@@ -10,6 +10,16 @@ export default function DetalhesProfissional() {
     const professionalData = profissional ? JSON.parse(profissional) : null;
     console.log("Profile Picture URI: ", professionalData.profilePicture);
 
+    const handlePhone = (telefone) => {
+        const telefoneFormatado = telefone.replace(/[^\d]/g, ''); // retira os caracteres especiais
+        const whatsappUrl = `https://wa.me/55${telefoneFormatado}`;
+        Linking.openURL(whatsappUrl);
+    }
+
+    const handleInstagram = (instagram) => {
+        const instagramUrl = `https://www.instagram.com/${instagram.replace('@', '')}`
+        Linking.openURL(instagramUrl)
+    }
     return (
         <View style={styles.container}>
             {professionalData ? (
@@ -22,15 +32,20 @@ export default function DetalhesProfissional() {
                         <Text style={styles.bold}>Nome: </Text>{professionalData.username}
                     </Text>
 
-                    <Text style={styles.label}>
-                        <Text style={styles.bold}>Telefone: </Text>{professionalData.telefone}
-                    </Text>
+                    <View style={styles.phoneInstagramContainer}>
+                        <Text style={styles.bold}>Telefone (WhatsApp): </Text>
+                        <TouchableOpacity onPress={() => handlePhone(professionalData.telefone)}>
+                            <Text style={[styles.bold, styles.link]}>{professionalData.telefone}</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                    <Text style={styles.label}>
+                    <View style={styles.phoneInstagramContainer}>
+                        <Text style={styles.bold}>Instagram: </Text>
+                        <TouchableOpacity onPress={() => handleInstagram(professionalData.instagram)}>
+                            <Text style={[styles.bold, styles.linkInstagram]}>{professionalData.instagram}</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                        <Text style={styles.bold}>Instagram: </Text>{professionalData.instagram}
-
-                    </Text>
                     <Text style={styles.label}>
 
                         <Text style={styles.bold}>Localização: </Text>{professionalData.localizacao}
@@ -60,8 +75,6 @@ export default function DetalhesProfissional() {
                 </TouchableOpacity>
             </View>
         </View>
-
-
     );
 }
 
@@ -69,15 +82,30 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
+        alignItems: 'flex-start',
+        padding: 30,
     },
     label: {
         fontSize: 20,
         marginBottom: hp('3%'),
     },
     bold: {
+        fontSize: hp('2.8%'),
         fontWeight: 'bold',
+    },
+    link: {
+        color: '#25D366',
+        width: wp('50%'), 
+        fontSize: hp('2.2%'), 
+    },
+    linkInstagram: {
+        fontSize: 20,
+        color: '#B3279A',
+    },
+    phoneInstagramContainer: {
+        flexDirection: 'row',
+        alignItems: 'center', 
+        marginBottom: hp('3%'),
     },
     profilePicture: {
         width: 100,
@@ -92,7 +120,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        width: '80%',
+        width: '100%',
     },
     buttonText: {
         fontSize: hp(2.5),
@@ -105,5 +133,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-      },
+    },
 })
