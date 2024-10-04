@@ -90,11 +90,13 @@ const styles = StyleSheet.create({
         marginBottom: hp('3%'),
     },
     bold: {
-        fontSize: 20,
+        fontSize: hp('2.8%'),
         fontWeight: 'bold',
     },
     link: {
         color: '#25D366',
+        width: wp('50%'), 
+        fontSize: hp('2.2%'), 
     },
     linkInstagram: {
         fontSize: 20,
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     },
     phoneInstagramContainer: {
         flexDirection: 'row',
-        alignItems: 'center',  // Garante que o texto e o link estejam alinhados verticalmente
+        alignItems: 'center', 
         marginBottom: hp('3%'),
     },
     profilePicture: {
