@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StatusBar, SafeAreaView, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StatusBar, SafeAreaView, TextInput, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
@@ -120,25 +120,32 @@ export default function PesquisaLocalizacao({ setLocalizacao }) {
         )}
       </View>
 
-      <FlatList
-        data={suggestions}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
-            <Text style={styles.suggestionText}>{item}</Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Sugestões de locais */}
+        <FlatList
+          data={suggestions}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
+              <Text style={styles.suggestionText}>{item}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
 
-      {/* lista de profissionais */}
-      <FlatList
-        data={profissionais}
-        renderItem={renderProfessional}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={3}  
-        columnWrapperStyle={styles.row}
-        ListEmptyComponent={<Text style={styles.vazio}>Nenhum profissional encontrado</Text>}
-      />
+        {/* Lista de profissionais */}
+        {profissionais.length > 0 && (
+          <View style={styles.professionalList}>
+            <FlatList
+              data={profissionais}
+              renderItem={renderProfessional}
+              keyExtractor={(item, index) => index.toString()}
+              numColumns={3}  
+              columnWrapperStyle={styles.row}
+              ListEmptyComponent={<Text style={styles.vazio}>Nenhum profissional encontrado</Text>}
+            />
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -148,6 +155,9 @@ const styles = {
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: StatusBar.currentHeight,
+  },
+  scrollContainer: {
+    paddingBottom: 20, 
   },
   searchBar: {
     flexDirection: 'row',
