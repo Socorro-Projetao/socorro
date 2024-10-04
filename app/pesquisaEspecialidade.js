@@ -22,31 +22,30 @@ export default function pesquisaEspecialidade() {
         const savedSearch = await AsyncStorage.getItem('pesquisaEspecialidade');
         if (savedSearch) {
           setSearch(savedSearch);
+          fetchFilteredProfessionals(savedSearch);
         }
       } catch (error) {
         console.error('Erro ao carregar pesquisa salva:', error);
       }
-
-      if (search.length > 0) {
-        const q = query(
-          collection(db, 'professionals'),
-          where('especialidade', '==', search)
-        );
-
-        try {
-          const querySnapshot = await getDocs(q);
-          const professionalsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setFilteredProfessionals(professionalsList);
-        } catch (error) {
-          console.error('Erro ao buscar profissionais:', error);
-        }
-      } else {
-        setFilteredProfessionals([]);
-      }
     };
 
     fetchProfessionals();
-  }, [search]); 
+  }, []);
+
+  const fetchFilteredProfessionals = async (especialidade) => {
+    const q = query(
+      collection(db, 'professionals'),
+      where('especialidade', '==', especialidade)
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+      const professionalsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setFilteredProfessionals(professionalsList);
+    } catch (error) {
+      console.error('Erro ao buscar profissionais:', error);
+    }
+  };
 
   const filteredSuggestions = suggestions.filter(item =>
     item.label.toLowerCase().includes(search.toLowerCase())
@@ -56,6 +55,7 @@ export default function pesquisaEspecialidade() {
     try {
       setSearch(especialidade.label);
       await AsyncStorage.setItem('pesquisaEspecialidade', especialidade.label);
+      fetchFilteredProfessionals(especialidade.label);  
     } catch (error) {
       console.error('Erro ao salvar pesquisa:', error);
     }
@@ -81,6 +81,21 @@ export default function pesquisaEspecialidade() {
     </TouchableOpacity>
   );
 
+  const handleClearScreen = async () => {
+    setSearch('');
+    setFilteredProfessionals([]);
+    try {
+      await AsyncStorage.removeItem('pesquisaEspecialidade');
+    } catch (error) {
+      console.error('Erro ao limpar pesquisa salva:', error);
+    }
+  };
+
+  const handleBackPress = async () => {
+    await handleClearScreen(); 
+    router.push("opcoesPesquisa");  
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBar}>
@@ -88,7 +103,7 @@ export default function pesquisaEspecialidade() {
           name='arrowleft' 
           size={25} 
           color='#0F1626' 
-          onPress={() => router.push("opcoesPesquisa")} 
+          onPress={handleBackPress}
           style={styles.iconLeft} 
         />
         <TextInput
@@ -113,15 +128,7 @@ export default function pesquisaEspecialidade() {
             name='close' 
             size={25} 
             color='#0F1626' 
-            onPress={async () => {
-              setSearch('');
-              setFilteredProfessionals([]);
-              try {
-                await AsyncStorage.removeItem('pesquisaEspecialidade');
-              } catch (error) {
-                console.error('Erro ao limpar pesquisa salva:', error);
-              }
-            }} 
+            onPress={handleClearScreen}
             style={styles.iconClose} 
           />
         )}
