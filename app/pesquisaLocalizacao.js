@@ -176,8 +176,8 @@ const styles = {
 
   },
   row: {
-    justifyContent: 'space-between',
-    paddingHorizontal: wp(4),
+    justifyContent: 'flex-start', 
+    paddingHorizontal: wp(2), 
     marginBottom: wp(3),
   },
   professionalCard: {
@@ -186,7 +186,7 @@ const styles = {
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    width: wp(28),
+    width: wp(30),
   },
   professionalImage: {
     width: 80,
