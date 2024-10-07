@@ -11,8 +11,9 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import { MenuItem } from './CustomMenuItems';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 
 const isIOS = Platform.OS == 'ios'
@@ -30,15 +31,14 @@ export default function HomeHeader() {
         await logout()
     }
 
+    const navigation = useNavigation();
+
     return (
         <View style={[styles.container, { paddingTop: isIOS ? top : top + 10 }]} >
             <View style={styles.headerLeft}>
-                <TouchableOpacity onPress={() => router.push("home")}>
-                    <AntDesign
-                        name="left"
-                        size={25}
-                        color="#FFFFFF" />
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <MaterialCommunityIcons name="menu" size={24} color="white" />
+        </TouchableOpacity>
                 <Text style={styles.headerText}>SOCORRO!!</Text>
             </View>
 
