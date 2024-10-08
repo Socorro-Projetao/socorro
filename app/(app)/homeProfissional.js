@@ -7,7 +7,6 @@ export default function HomeProfissional () {
         <View style={styles.container}>
             <Image source={require('../../assets/images/logo-SOCORRO.png')}
             style={styles.image}/>
-            <Text>elias</Text>
         </View>
     )
 }
