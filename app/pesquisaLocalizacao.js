@@ -88,7 +88,7 @@ export default function PesquisaLocalizacao({ setLocalizacao }) {
             name='arrowleft'
             size={25}
             color='#0F1626'
-            onPress={() => router.push("opcoesPesquisa")}
+            onPress={() => router.push("home")}
             style={styles.iconLeft}
           />
         <TextInput

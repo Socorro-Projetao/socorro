@@ -93,7 +93,7 @@ export default function pesquisaEspecialidade() {
 
   const handleBackPress = async () => {
     await handleClearScreen(); 
-    router.push("opcoesPesquisa");  
+    router.push("home");  
   };
 
   return (

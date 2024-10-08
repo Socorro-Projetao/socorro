@@ -67,7 +67,7 @@ export default function pesquisaProfissional() {
 
   const handleBackPress = async () => {
     await handleClearSearch(); 
-    router.push("opcoesPesquisa");
+    router.push("home");
   };
 
   return (
