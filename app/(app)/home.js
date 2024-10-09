@@ -8,22 +8,35 @@ import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firesto
 import HomeProfissonal from "../(app)/homeProfissional"
 
 const publicidade = [
-  { id: 1, texto: 'anuncie aqui 1' },
-  { id: 2, texto: 'anuncie aqui 2' },
-  { id: 3, texto: 'anuncie aqui 3' },
+  {
+    id: 1,
+    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDynvtt5yxGi6BP3z9DSolriiaSGBUGxwq0w&s',
+    userId: 'rMUj5YUBsaUqhK7OYrKoCAsrq7M2',
+  },
+  {
+    id: 2,
+    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxD5tbtCchVtoJnfV8SXEOYZvA0jN6wAAVQA&s',
+    userId: 'IbDeJAMLNAV8GhetG9dk5D1KwtH2',
+  },
+  {
+    id: 3,
+    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5IUG1pG0Jb79b84qJa_i9zvYiaFurGguuWw&s',
+    userId: 'nAIQOvWCtdb83ILmYdgqnuhd1S52',
+  },
 ];
 
 const Item = ({ image, name, role }) => (
   <TouchableOpacity style={styles.card}>
-    <Image source={image} style={styles.image} />
+    <Image source={image} style={styles.image} resizeMode="cover" />
     <Text numberOfLines={2}>{name}</Text>
     <Text numberOfLines={1}>{role}</Text>
   </TouchableOpacity>
 );
 
-const Anuncio = ({ texto }) => (
+
+const Anuncio = ({ profilePicture }) => (
   <TouchableOpacity style={styles.cardAnuncio}>
-    <Text style={styles.textAnuncio}>{texto}</Text>
+    <Image source={{ uri: profilePicture }} style={styles.adImage} resizeMode="cover" />
   </TouchableOpacity>
 );
 
@@ -31,13 +44,22 @@ const Home = () => {
   const router = useRouter();
   const [isUserAllowed, setIsUserAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [randomAnuncio, setRandomAnuncio] = useState([]);
+  const [randomAnuncio, setRandomAnuncio] = useState({});
   const [professionals, setProfessionals] = useState([]);
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * publicidade.length);
-    const newRandomAnuncio = publicidade.slice(randomIndex, randomIndex + 1);
-    setRandomAnuncio(newRandomAnuncio);
+    setRandomAnuncio(publicidade[randomIndex]);
+  }, []);
+
+  // 5 segundos de intervalo
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * publicidade.length);
+      setRandomAnuncio(publicidade[randomIndex]);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -123,9 +145,12 @@ const Home = () => {
 
   const renderSection = ({ section }) => {
     if (section.title === 'Anúncios') {
-      return section.data[0].map(anuncio => (
-        <Anuncio key={anuncio.id} texto={anuncio.texto} />
-      ));
+      return (
+        <Anuncio
+          key={section.data[0].id}
+          profilePicture={section.data[0].profilePicture}
+        />
+      );
     } else {
       return renderHorizontalFlatList(section.data[0]);
     }
@@ -160,73 +185,73 @@ const Home = () => {
           />
         </>
       ) : (
-        <HomeProfissonal/>
-        )}
-        </View>
-      );
+        <HomeProfissonal />
+      )}
+    </View>
+  );
 };
 
-      const styles = StyleSheet.create({
-        container: {
-        flex: 1,
-      backgroundColor: '#ffffff',
-      padding: 20,
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    padding: 20,
   },
-      header: {
-        backgroundColor: '#fff',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      marginBottom: 10,
+  header: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-      title: {
-        fontSize: 20,
-      fontWeight: 'bold',
-      textAlign: 'left',
-      marginVertical: 10,
-      marginLeft: wp(2),
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginVertical: 10,
+    marginLeft: wp(2),
   },
-      subTitle: {
-        fontSize: 16,
-      textAlign: 'left',
-      marginTop: 10,
-      marginBottom: 10,
-      marginLeft: wp(2),
+  subTitle: {
+    fontSize: 16,
+    textAlign: 'left',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: wp(2),
   },
-      card: {
-        backgroundColor: '#f0f0f0',
-      margin: 5,
-      padding: 10,
-      borderRadius: 10,
-      alignItems: 'center',
-      width: 120,
+  card: {
+    backgroundColor: '#f0f0f0',
+    margin: 5,
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: 120,
   },
-      image: {
-        width: 50,
-      height: 50,
-      borderRadius: 25,
-      marginBottom: 10,
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 10,
   },
-      cardAnuncio: {
-        backgroundColor: '#f0f0f0',
-      margin: 5,
-      padding: 10,
-      borderRadius: 10,
-      alignItems: 'center',
-      textAlign: 'center',
-      height: 100,
+  cardAnuncio: {
+    backgroundColor: '#f0f0f0',
+    margin: 5,
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    textAlign: 'center',
+    height: 100,
   },
-      textAnuncio: {
-        textAlign: 'center',
+  adImage: {
+    width: '100%', // Make the ad image fill the width of the card
+    height: '100%', // Make the ad image fill the height of the card
+    borderRadius: 10,
+    marginBottom: 5,
   },
-      searchIcon: {
-        marginRight: wp(2),
-  },
-      noAccessText: {
-        textAlign: 'center',
-      fontSize: 18,
-      color: 'red',
-      marginTop: 20,
+  noAccessText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'red',
+    marginTop: 20,
   },
 });
 
