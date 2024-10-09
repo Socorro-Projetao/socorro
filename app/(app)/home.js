@@ -81,12 +81,25 @@ const Home = () => {
     {
       title: 'Anúncios',
       data: [randomAnuncio],
-    },
-    {
-      title: 'Principais Especialidades',
-      data: [professionals],
-    },
+    }
   ];
+
+  const pedreiros = professionals.filter(prof => prof.especialidade === 'Pedreiro');
+  const encanadores = professionals.filter(prof => prof.especialidade === 'Encanador');
+  const eletricistas = professionals.filter(prof => prof.especialidade === 'Eletricista');
+  const intercalado = [];
+
+  const maxLength = Math.max(pedreiros.length, encanadores.length, eletricistas.length);
+  for (let i = 0; i < maxLength; i++) {
+    if (i < pedreiros.length) intercalado.push(pedreiros[i]);
+    if (i < encanadores.length) intercalado.push(encanadores[i]);
+    if (i < eletricistas.length) intercalado.push(eletricistas[i]);
+  }
+
+  sections.push({
+    title: 'Principais Especialidades',
+    data: [intercalado],
+  });
 
   listEspecialidades.forEach(especialidade => {
     sections.push({
