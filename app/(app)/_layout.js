@@ -30,10 +30,6 @@ function CustomDrawerContent({navigation}) {
         onPress={() => navigation.navigate('pesquisaLocalizacao')}>Localização</Text>
 
         <View style={styles.menuItem}>
-          <MaterialIcons name="history" size={24} color="black" />
-          <Text style={styles.menuItemText}>Últimos contratados</Text>
-        </View>
-        <View style={styles.menuItem}>
           <MaterialIcons name="star" size={24} color="black" />
           <Text style={styles.menuItemText}>Meus avaliados</Text>
         </View>
@@ -63,11 +59,11 @@ export default function _layout() {
           ),
           header: () => <HomeHeader />
         }}/>
-        <Drawer.Screen 
+        {/* <Drawer.Screen 
           name='opcoesPesquisa' 
           options={{
             header: () => <HomeHeader />
-          }}/>
+          }}/> */}
       </Drawer>
     //</GestureHandlerRootView>
   )
