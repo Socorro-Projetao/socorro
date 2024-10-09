@@ -68,10 +68,13 @@ const Home = () => {
     const db = getFirestore();
     const professionalsCollection = collection(db, 'professionals');
     const professionalsSnapshot = await getDocs(professionalsCollection);
-    const professionalsList = professionalsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const professionalsList = professionalsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      };
+    });
     setProfessionals(professionalsList);
   };
 
@@ -111,7 +114,7 @@ const Home = () => {
   const renderHorizontalFlatList = (filteredData) => (
     <FlatList
       data={filteredData}
-      renderItem={({ item }) => <Item key={item.id} name={item.username} role={item.especialidade} image={require('../../assets/images/icon_perfil.png')} />}
+      renderItem={({ item }) => <Item key={item.id} name={item.username} role={item.especialidade} image={{ uri: item.profilePicture }} />}
       keyExtractor={(item) => item.id.toString()}
       horizontal={true}
       showsHorizontalScrollIndicator={false}
