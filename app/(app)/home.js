@@ -4,16 +4,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useRouter } from 'expo-router';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import HomeProfissonal from "../(app)/homeProfissional"
-
-const data = [
-  { id: 1, name: 'João Silva', role: 'Pedreiro', image: require('../../assets/images/icon_perfil.png') },
-  { id: 2, name: 'Maria Oliveira', role: 'Vidraceiro', image: require('../../assets/images/icon_perfil.png') },
-  { id: 3, name: 'Sandro Ferreira', role: 'Eletricista', image: require('../../assets/images/icon_perfil.png') },
-  { id: 4, name: 'Pedro Lima', role: 'Encanador', image: require('../../assets/images/icon_perfil.png') },
-  { id: 5, name: 'Ana Souza', role: 'Pintor', image: require('../../assets/images/icon_perfil.png') },
-];
 
 const publicidade = [
   { id: 1, texto: 'anuncie aqui 1' },
@@ -40,6 +32,8 @@ const Home = () => {
   const [isUserAllowed, setIsUserAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [randomAnuncio, setRandomAnuncio] = useState([]);
+  const [professionals, setProfessionals] = useState([]);
+
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * publicidade.length);
     const newRandomAnuncio = publicidade.slice(randomIndex, randomIndex + 1);
@@ -66,34 +60,61 @@ const Home = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchProfessionals();
+  }, []);
+
+  const fetchProfessionals = async () => {
+    const db = getFirestore();
+    const professionalsCollection = collection(db, 'professionals');
+    const professionalsSnapshot = await getDocs(professionalsCollection);
+    const professionalsList = professionalsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      };
+    });
+    setProfessionals(professionalsList);
+  };
+
+  const listEspecialidades = [...new Set(professionals.map(prof => prof.especialidade))];
 
   const sections = [
     {
-      title: 'Últimos Contratados',
-      data: [data],
-    },
-    {
       title: 'Anúncios',
       data: [randomAnuncio],
-    },
-    {
-      title: 'Principais Especialidades',
-      data: [data],
-    },
-    {
-      title: 'Pedreiro',
-      data: [data],
-    },
-    {
-      title: 'Vidraceiro',
-      data: [data],
-    },
+    }
   ];
+
+  const pedreiros = professionals.filter(prof => prof.especialidade === 'Pedreiro');
+  const encanadores = professionals.filter(prof => prof.especialidade === 'Encanador');
+  const eletricistas = professionals.filter(prof => prof.especialidade === 'Eletricista');
+  const intercalado = [];
+
+  const maxLength = Math.max(pedreiros.length, encanadores.length, eletricistas.length);
+  for (let i = 0; i < maxLength; i++) {
+    if (i < pedreiros.length) intercalado.push(pedreiros[i]);
+    if (i < encanadores.length) intercalado.push(encanadores[i]);
+    if (i < eletricistas.length) intercalado.push(eletricistas[i]);
+  }
+
+  sections.push({
+    title: 'Principais Especialidades',
+    data: [intercalado],
+  });
+
+  listEspecialidades.forEach(especialidade => {
+    sections.push({
+      title: especialidade,
+      data: [professionals.filter(prof => prof.especialidade === especialidade)],
+    });
+  });
 
   const renderHorizontalFlatList = (filteredData) => (
     <FlatList
       data={filteredData}
-      renderItem={({ item }) => <Item name={item.name} role={item.role} image={item.image} />}
+      renderItem={({ item }) => <Item key={item.id} name={item.username} role={item.especialidade} image={{ uri: item.profilePicture }} />}
       keyExtractor={(item) => item.id.toString()}
       horizontal={true}
       showsHorizontalScrollIndicator={false}
@@ -123,9 +144,9 @@ const Home = () => {
             keyExtractor={(item, index) => item + index}
             renderSectionHeader={({ section: { title } }) => {
               let titleStyle = styles.title;
-              if (title === 'Últimos Contratados' || title === 'Principais Especialidades' || title === 'Anúncios') {
+              if (title === 'Principais Especialidades' || title === 'Anúncios') {
                 titleStyle = styles.title;
-              } else if (title === 'Pedreiro' || title === 'Vidraceiro') {
+              } else if (listEspecialidades.includes(title)) {
                 titleStyle = styles.subTitle;
               }
 
