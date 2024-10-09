@@ -79,10 +79,6 @@ const Home = () => {
 
   const sections = [
     {
-      title: 'Últimos Contratados',
-      data: [professionals],
-    },
-    {
       title: 'Anúncios',
       data: [randomAnuncio],
     },
@@ -132,7 +128,7 @@ const Home = () => {
             keyExtractor={(item, index) => item + index}
             renderSectionHeader={({ section: { title } }) => {
               let titleStyle = styles.title;
-              if (title === 'Últimos Contratados' || title === 'Principais Especialidades' || title === 'Anúncios') {
+              if (title === 'Principais Especialidades' || title === 'Anúncios') {
                 titleStyle = styles.title;
               } else if (listEspecialidades.includes(title)) {
                 titleStyle = styles.subTitle;
