@@ -16,9 +16,9 @@ import { sexoOpcoes } from './selectSexOptions';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
-import s3 from './aws-config'; 
-import 'react-native-get-random-values'; 
-import { v4 as uuidv4 } from 'uuid'; 
+import s3 from './aws-config';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -65,13 +65,13 @@ export default function SignUpProfissional() {
             const blob = await response.blob();
             const fileType = imageUri.split('.').pop();
             const fileName = `${uuidv4()}.${fileType}`;
-            
+
             const params = {
                 Bucket: 'socorroprojeto', // Substitua pelo nome do bucket
                 Key: fileName,
                 Body: blob,
                 ContentType: blob.type,
-               // ACL: 'public-read',
+                // ACL: 'public-read',
             };
 
             const data = await s3.upload(params).promise();
@@ -97,7 +97,7 @@ export default function SignUpProfissional() {
 
     const handleSearchChange = (text) => {
         setSearch(text);
-        if (text.length > 2) { 
+        if (text.length > 2) {
             fetchLocations(text);
         } else {
             setSuggestions([]);
@@ -149,7 +149,7 @@ export default function SignUpProfissional() {
 
         setLoading(true);
         let imageUrl = null;
-        
+
         if (profileImage) {
             try {
                 imageUrl = await uploadImageToS3(profileImage);
@@ -293,15 +293,16 @@ export default function SignUpProfissional() {
                                 )}
                             </View>
 
-                            <FlatList
-                                data={suggestions}
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
-                                        <Text style={styles.suggestionText}>{item}</Text>
-                                    </TouchableOpacity>
-                                )}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
+                            {/* renderização das sugestões */}
+                            {suggestions.length > 0 && (
+                                <View style={styles.suggestionsContainer}>
+                                    {suggestions.map((item, index) => (
+                                        <TouchableOpacity key={index} onPress={() => handleSuggestionSelect(item)}>
+                                            <Text style={styles.suggestionText}>{item}</Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            )}
                         </SafeAreaView>
 
                         {/* Campo de Data de Nascimento */}
@@ -505,7 +506,7 @@ const styles = {
     },
     loading: {
         width: wp('20%'),
-        height: hp('10%'), 
+        height: hp('10%'),
     },
 };
 
