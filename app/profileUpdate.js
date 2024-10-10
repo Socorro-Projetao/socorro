@@ -96,10 +96,15 @@ export default function ProfileUpdate() {
     const idade = today.getFullYear() - dataNascimento.getFullYear();
 
 
-    if (!dataNascimentoValida || idade < idadeMinima) {
-      Alert.alert('Você deve ter pelo menos 18 anos e fornecer uma data de nascimento válida.');
+    if ( user.role === 'profissional') {
+      if(!dataNascimentoValida || idade < idadeMinima) {
+      Alert.alert(
+        'Data de Nascimento Inválida',
+        'Você deve ter pelo menos 18 anos e fornecer uma data de nascimento válida.',
+      );
       return false;
     }
+   }
 
     if (!isFormValid) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos obrigatórios!');
