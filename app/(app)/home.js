@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, SectionList } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { useRouter } from 'expo-router';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import HomeProfissonal from "../(app)/homeProfissional"
 
 const publicidade = [
   {
@@ -41,7 +38,6 @@ const Anuncio = ({ profilePicture }) => (
 );
 
 const Home = () => {
-  const router = useRouter();
   const [isUserAllowed, setIsUserAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [randomAnuncio, setRandomAnuncio] = useState({});
@@ -185,7 +181,7 @@ const Home = () => {
           />
         </>
       ) : (
-        <HomeProfissonal />
+        <Text style={styles.noAccessText}>Você não tem acesso.</Text>
       )}
     </View>
   );
@@ -252,7 +248,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'red',
     marginTop: 20,
+    fontWeight: 'bold',
   },
 });
 
-      export default Home;
+export default Home;
