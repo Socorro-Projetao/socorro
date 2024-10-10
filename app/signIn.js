@@ -81,7 +81,7 @@ export default function SignIn() {
                         )
                     }
 
-                    <TouchableOpacity onPress={() => router.push("profileSelection")} style={[styles.button, styles.buttonCadastrar]}>
+                    <TouchableOpacity onPress={() => router.push("profileSelection")} style={styles.button}>
                         <Text style={styles.buttonText}>Cadastrar-se</Text>
                     </TouchableOpacity>
                 </View>
@@ -158,11 +158,8 @@ const styles = {
         fontSize: hp(2.5),
         color: '#000000',
     },
-    buttonCadastrar: {
-        // Estilo adicional, se necessário
-    },
     loading: {
-        // width: wp('20%'),
-        // height: hp('10%'), 
+        width: wp('20%'),
+        height: hp('10%'), 
     },
 }
