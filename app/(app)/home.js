@@ -22,8 +22,8 @@ const publicidade = [
   },
 ];
 
-const Item = ({ image, name, role }) => (
-  <TouchableOpacity style={styles.card}>
+const Item = ({ image, name, role, onPress }) => (
+  <TouchableOpacity style={styles.card} onPress={onPress}>
     <Image source={image} style={styles.image} resizeMode="cover" />
     <Text numberOfLines={2}>{name}</Text>
     <Text numberOfLines={1}>{role}</Text>
@@ -129,10 +129,26 @@ const Home = () => {
     });
   });
 
+  const handleProfessionalPress = (professional) => {
+    router.push({
+      pathname: 'detalhesProfissional',
+      params: { profissional: JSON.stringify(professional) },
+    });
+  };
+
+
   const renderHorizontalFlatList = (filteredData) => (
     <FlatList
       data={filteredData}
-      renderItem={({ item }) => <Item key={item.id} name={item.username} role={item.especialidade} image={{ uri: item.profilePicture }} />}
+      renderItem={({ item }) => (
+        <Item
+          key={item.id}
+          name={item.username}
+          role={item.especialidade}
+          image={{ uri: item.profilePicture }}
+          onPress={() => handleProfessionalPress(item)}
+        />
+      )}
       keyExtractor={(item) => item.id.toString()}
       horizontal={true}
       showsHorizontalScrollIndicator={false}

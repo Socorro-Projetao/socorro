@@ -7,6 +7,10 @@ import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
+import s3 from './aws-config'; 
+import 'react-native-get-random-values'; 
+import { v4 as uuidv4 } from 'uuid'; 
+
 
 export default function SignUpCliente() {
 
@@ -20,6 +24,29 @@ export default function SignUpCliente() {
     const emailRef = useRef("");
     const passwordRef = useRef("");
 
+    const uploadImageToS3 = async (imageUri) => {
+        try {
+            const response = await fetch(imageUri);
+            const blob = await response.blob();
+            const fileType = imageUri.split('.').pop();
+            const fileName = `${uuidv4()}.${fileType}`;
+            
+            const params = {
+                Bucket: 'socorroprojeto', // Substitua pelo nome do bucket
+                Key: fileName,
+                Body: blob,
+                ContentType: blob.type,
+               // ACL: 'public-read',
+            };
+
+            const data = await s3.upload(params).promise();
+            return data.Location; // Retorna a URL pública da imagem
+        } catch (error) {
+            console.log('Erro no upload: ', error);
+            throw new Error('Falha ao fazer o upload da imagem');
+        }
+    };
+
     const handleRegister = async () => {
         if (!emailRef.current || !passwordRef.current || !usernameRef.current || !telefone) {
             //não é necessário inserir imagem de perfil no ato do cadastro
@@ -28,7 +55,19 @@ export default function SignUpCliente() {
         }
         setLoading(true)
 
-        let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileImage, telefone)
+        let imageUrl = null;
+        
+        if (profileImage) {
+            try {
+                imageUrl = await uploadImageToS3(profileImage);
+            } catch (error) {
+                setLoading(false);
+                Alert.alert('Erro', 'Não foi possível fazer o upload da imagem.');
+                return false;
+            }
+        }
+
+        let response = await register(emailRef.current, passwordRef.current, usernameRef.current, imageUrl, telefone)
         setLoading(false)
 
         //console.log('resultado: ', response)

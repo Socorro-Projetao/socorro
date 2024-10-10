@@ -119,6 +119,7 @@ export const AuthContextProvider = ({ children }) => {
                 username,
                 profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
+                email,
                 telefone
             });
 
@@ -157,6 +158,7 @@ export const AuthContextProvider = ({ children }) => {
                 sexo,
                 telefone,
                 instagram,
+                email,
                 localizacao,
                 dataNascimento: sdataNascimento
             });
@@ -180,6 +182,7 @@ export const AuthContextProvider = ({ children }) => {
 
             await setDoc(doc(db, "anunciantes", response?.user?.uid), {
                 nomeFantasia,
+                email, 
                 profilePicture: profilePicture || null,
                 userId: response?.user?.uid,
             });

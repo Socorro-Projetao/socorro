@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
@@ -7,6 +7,12 @@ export default function detalhesAnunciantes() {
     const router = useRouter();
     const { anunciante } = useLocalSearchParams();
     const anuncianteData = anunciante ? JSON.parse(anunciante) : null;
+
+    const handleEmailPress = () => {
+        if (anuncianteData && anuncianteData.email) {
+            Linking.openURL(`mailto:${anuncianteData.email}`);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -19,9 +25,11 @@ export default function detalhesAnunciantes() {
                     <Text style={styles.label}>
                         <Text style={styles.bold}>Nome: </Text>{anuncianteData.nomeFantasia}
                     </Text>
-                    {/* <Text style={styles.label}>
-                        <Text style={styles.bold}>Email: </Text>{email}
-                    </Text> */}
+                    <TouchableOpacity onPress={handleEmailPress}>
+                        <Text style={[styles.label, styles.link]}>
+                            <Text style={styles.bold}>Email: </Text>{anuncianteData.email}
+                        </Text>
+                    </TouchableOpacity>
                 </>
             ) : (
                 <Text>Erro ao carregar os dados do anunciante.</Text>
@@ -52,8 +60,8 @@ const styles = StyleSheet.create({
     },
     link: {
         color: '#25D366',
-        width: wp('50%'), 
-        fontSize: hp('2.2%'), 
+        width: wp('100%'),
+        fontSize: hp('2.2%'),
     },
     profilePicture: {
         width: 100,
