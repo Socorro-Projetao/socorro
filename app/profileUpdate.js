@@ -15,6 +15,9 @@ import { sexoOpcoes } from './selectSexOptions';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
+import s3 from './aws-config';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ProfileUpdate() {
   const { user, isAuthenticated, updateUserData } = useAuth();
@@ -112,16 +115,42 @@ const handleSuggestionSelect = (suggestion) => {
         dataNascimento.getDate()
       );
 
-      // Atualiza os dados no Firestore
+      const uploadImageToS3 = async (imageUri) => {
+        try {
+          const response = await fetch(imageUri);
+          const blob = await response.blob();
+          const fileType = imageUri.split('.').pop();
+          const fileName = `${uuidv4()}.${fileType}`;
+          
+          const params = {
+            Bucket: 'socorroprojeto',
+            Key: fileName,
+            Body: blob,
+            ContentType: blob.type,
+          };
+
+          const data = await s3.upload(params).promise();
+          return data.Location;
+        } catch (error) {
+          console.log('Erro no upload: ', error);
+          throw new Error('Falha ao fazer o upload da imagem');
+        }
+      };
+
+      let profileImageUrl = user.profilePicture;
+      if (profileImage && profileImage !== user.profilePicture) {
+        profileImageUrl = await uploadImageToS3(profileImage);
+      }
+
       await updateDoc(docRef, {
         ...(user.role === 'user' && {
           username: usernameRef.current,
-          profilePicture: profileImage || user.profilePicture,
+          profilePicture: profileImageUrl,
           telefone: telefone,
         }),
         ...(user.role === 'profissional' && {
           username: usernameRef.current,
-          profilePicture: profileImage || user.profilePicture,
+          profilePicture: profileImageUrl,
           telefone: telefone,
           especialidade: selectedEspecialidade,
           experiencia: experiencia,
@@ -132,7 +161,7 @@ const handleSuggestionSelect = (suggestion) => {
         }),
         ...(user.role === 'anunciante' && {
           nomeFantasia: nomeFantasiaRef.current,
-          profilePicture: profileImage || user.profilePicture,
+          profilePicture: profileImageUrl || user.profilePicture,
         }),
       });
       // Atualiza os dados no AuthContext
