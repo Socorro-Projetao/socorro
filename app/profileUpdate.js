@@ -89,6 +89,17 @@ const handleSuggestionSelect = (suggestion) => {
         (user.role === 'user' || usernameRef.current || telefone)
       )
     );
+     // Verificação da data de nascimento
+  const today = new Date();
+  const idadeMinima = 18; 
+  const dataNascimentoValida = dataNascimento instanceof Date && !isNaN(dataNascimento);
+  const idade = today.getFullYear() - dataNascimento.getFullYear();
+  
+  
+  if (!dataNascimentoValida || idade < idadeMinima) {
+    Alert.alert('Você deve ter pelo menos 18 anos e fornecer uma data de nascimento válida.');
+    return false;
+  }
 
     if (!isFormValid) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos obrigatórios!');

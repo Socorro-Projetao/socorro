@@ -20,6 +20,22 @@ import s3 from './aws-config';
 import 'react-native-get-random-values'; 
 import { v4 as uuidv4 } from 'uuid'; 
 
+
+
+const calcularIdade = (dataNascimento) => {
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+    }
+
+    return idade;
+};
+
+
 export default function SignUpProfissional() {
     const router = useRouter();
 
@@ -121,6 +137,11 @@ export default function SignUpProfissional() {
     };
 
     const handleRegister = async () => {
+        const idade = calcularIdade(dataNascimento);
+        if (idade < 18) {
+            Alert.alert('Cadastro', 'Você precisa ter pelo menos 18 anos para se cadastrar.');
+            return false;
+        }
         if (!emailRef.current || !passwordRef.current || !usernameRef.current || !selectedEspecialidade || !experiencia || !sexo || !telefone || !instagram || !localizacao || !dataNascimento || !profileImage) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
             return false;
