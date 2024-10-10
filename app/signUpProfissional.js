@@ -16,6 +16,9 @@ import { sexoOpcoes } from './selectSexOptions';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
+import s3 from './aws-config'; 
+import 'react-native-get-random-values'; 
+import { v4 as uuidv4 } from 'uuid'; 
 
 export default function SignUpProfissional() {
     const router = useRouter();
@@ -40,6 +43,28 @@ export default function SignUpProfissional() {
     const [suggestions, setSuggestions] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
 
+    const uploadImageToS3 = async (imageUri) => {
+        try {
+            const response = await fetch(imageUri);
+            const blob = await response.blob();
+            const fileType = imageUri.split('.').pop();
+            const fileName = `${uuidv4()}.${fileType}`;
+            
+            const params = {
+                Bucket: 'socorroprojeto', // Substitua pelo nome do bucket
+                Key: fileName,
+                Body: blob,
+                ContentType: blob.type,
+               // ACL: 'public-read',
+            };
+
+            const data = await s3.upload(params).promise();
+            return data.Location; // Retorna a URL pública da imagem
+        } catch (error) {
+            console.log('Erro no upload: ', error);
+            throw new Error('Falha ao fazer o upload da imagem');
+        }
+    };
 
     const fetchLocations = async (input) => {
         const apiKey = 'AIzaSyCxzN0sraj4AJtLGMO0YQr2Kpx6B76HRp8';
@@ -102,11 +127,23 @@ export default function SignUpProfissional() {
         }
 
         setLoading(true);
+        let imageUrl = null;
+        
+        if (profileImage) {
+            try {
+                imageUrl = await uploadImageToS3(profileImage);
+            } catch (error) {
+                setLoading(false);
+                Alert.alert('Erro', 'Não foi possível fazer o upload da imagem.');
+                return false;
+            }
+        }
+
         const response = await registerProfessional(
             emailRef.current,
             passwordRef.current,
             usernameRef.current,
-            profileImage,
+            imageUrl,
             selectedEspecialidade,
             sexo,
             telefone,
