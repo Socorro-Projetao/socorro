@@ -6,6 +6,9 @@ import CustomKeyboardView from '../components/CustomKeyboardView';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
+import s3 from './aws-config'; 
+import 'react-native-get-random-values'; 
+import { v4 as uuidv4 } from 'uuid'; 
 
 export default function signUpAnunciante() {
     const router = useRouter()
@@ -17,6 +20,29 @@ export default function signUpAnunciante() {
     const passwordRef = useRef("")
     const [profileImage, setProfileImage] = useState(null);
 
+    const uploadImageToS3 = async (imageUri) => {
+        try {
+            const response = await fetch(imageUri);
+            const blob = await response.blob();
+            const fileType = imageUri.split('.').pop();
+            const fileName = `${uuidv4()}.${fileType}`;
+            
+            const params = {
+                Bucket: 'socorroprojeto', // Substitua pelo nome do bucket
+                Key: fileName,
+                Body: blob,
+                ContentType: blob.type,
+               // ACL: 'public-read',
+            };
+
+            const data = await s3.upload(params).promise();
+            return data.Location; // Retorna a URL pública da imagem
+        } catch (error) {
+            console.log('Erro no upload: ', error);
+            throw new Error('Falha ao fazer o upload da imagem');
+        }
+    };
+
     const handleRegister = async () => {
         if (!emailAnuncianteRef.current || !passwordRef.current || !nomeFantasiaRef.current || !profileImage) {
             Alert.alert('Cadastro', 'Por favor preencha todos os campos!');
@@ -24,7 +50,19 @@ export default function signUpAnunciante() {
         }
         setLoading(true)
 
-        let response = await registerAnunciante(emailAnuncianteRef.current, passwordRef.current, nomeFantasiaRef.current, profileImage)
+        let imageUrl = null;
+        
+        if (profileImage) {
+            try {
+                imageUrl = await uploadImageToS3(profileImage);
+            } catch (error) {
+                setLoading(false);
+                Alert.alert('Erro', 'Não foi possível fazer o upload da imagem.');
+                return false;
+            }
+        }
+
+        let response = await registerAnunciante(emailAnuncianteRef.current, passwordRef.current, nomeFantasiaRef.current, imageUrl)
         setLoading(false)
 
         if (!response.success) {
