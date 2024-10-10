@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, SectionList 
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { useRouter } from 'expo-router';
 
 const publicidade = [
   {
@@ -38,6 +39,7 @@ const Anuncio = ({ profilePicture }) => (
 );
 
 const Home = () => {
+  const router = useRouter();
   const [isUserAllowed, setIsUserAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [randomAnuncio, setRandomAnuncio] = useState({});
