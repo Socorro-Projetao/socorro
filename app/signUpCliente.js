@@ -7,9 +7,9 @@ import Loading from '../components/Loading';
 import * as ImagePicker from 'expo-image-picker';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
-import s3 from './aws-config'; // Importa as configurações do S3
-import 'react-native-get-random-values'; // Adiciona suporte para getRandomValues
-import { v4 as uuidv4 } from 'uuid'; // Importa a função para gerar UUIDs
+import s3 from './aws-config'; 
+import 'react-native-get-random-values'; 
+import { v4 as uuidv4 } from 'uuid'; 
 
 
 export default function SignUpCliente() {
@@ -56,7 +56,7 @@ export default function SignUpCliente() {
         setLoading(true)
 
         let imageUrl = null;
-        // Faz o upload da imagem caso ela exista
+        
         if (profileImage) {
             try {
                 imageUrl = await uploadImageToS3(profileImage);
