@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, Alert, Platform,FlatList, SafeAreaView } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert, Platform, FlatList, SafeAreaView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -50,35 +50,35 @@ export default function ProfileUpdate() {
     const apiKey = 'AIzaSyCxzN0sraj4AJtLGMO0YQr2Kpx6B76HRp8';
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=geocode&language=pt_BR&components=country:BR&key=${apiKey}`;
     try {
-        const response = await axios.get(url);
-        if (response.data.status === 'OK') {
-            setSuggestions(response.data.predictions.map(prediction => prediction.description));
-        }
+      const response = await axios.get(url);
+      if (response.data.status === 'OK') {
+        setSuggestions(response.data.predictions.map(prediction => prediction.description));
+      }
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-};
+  };
 
-const handleSearchChange = (text) => {
+  const handleSearchChange = (text) => {
     setSearch(text);
-    if (text.length > 2) { 
-        fetchLocations(text);
+    if (text.length > 2) {
+      fetchLocations(text);
     } else {
-        setSuggestions([]);
+      setSuggestions([]);
     }
-};
+  };
 
 
 
-const handleSuggestionSelect = (suggestion) => {
+  const handleSuggestionSelect = (suggestion) => {
     console.log(`Selecionado: ${suggestion}`);
     setSearch(suggestion);
     setSuggestions([]);
 
     if (setLocalizacao) {
-        setLocalizacao(suggestion);
+      setLocalizacao(suggestion);
     }
-};
+  };
 
 
   const handleUpdate = async () => {
@@ -89,17 +89,17 @@ const handleSuggestionSelect = (suggestion) => {
         (user.role === 'user' || usernameRef.current || telefone)
       )
     );
-     // Verificação da data de nascimento
-  const today = new Date();
-  const idadeMinima = 18; 
-  const dataNascimentoValida = dataNascimento instanceof Date && !isNaN(dataNascimento);
-  const idade = today.getFullYear() - dataNascimento.getFullYear();
-  
-  
-  if (!dataNascimentoValida || idade < idadeMinima) {
-    Alert.alert('Você deve ter pelo menos 18 anos e fornecer uma data de nascimento válida.');
-    return false;
-  }
+    // Verificação da data de nascimento
+    const today = new Date();
+    const idadeMinima = 18;
+    const dataNascimentoValida = dataNascimento instanceof Date && !isNaN(dataNascimento);
+    const idade = today.getFullYear() - dataNascimento.getFullYear();
+
+
+    if (!dataNascimentoValida || idade < idadeMinima) {
+      Alert.alert('Você deve ter pelo menos 18 anos e fornecer uma data de nascimento válida.');
+      return false;
+    }
 
     if (!isFormValid) {
       Alert.alert('Atualizar Perfil', 'Por favor preencha todos os campos obrigatórios!');
@@ -132,7 +132,7 @@ const handleSuggestionSelect = (suggestion) => {
           const blob = await response.blob();
           const fileType = imageUri.split('.').pop();
           const fileName = `${uuidv4()}.${fileType}`;
-          
+
           const params = {
             Bucket: 'socorroprojeto',
             Key: fileName,
@@ -306,7 +306,7 @@ const handleSuggestionSelect = (suggestion) => {
                             onBlur={() => setIsFocused(false)}  // perde o foco
                             onChangeText={handleSearchChange}
                           />
-                         
+
                           {search.length > 0 && (
                             <AntDesign
                               name='close'
@@ -413,7 +413,7 @@ const handleSuggestionSelect = (suggestion) => {
         </View>
       </View>
 
-      <View>
+      <View style={styles.buttonContainer}>
         {loading ? (
           <Loading style={styles.loading} />
         ) : (
@@ -461,6 +461,11 @@ const styles = {
   pickerContainer: {
     width: wp('80%'),
   },
+  buttonContainer: {
+    width: wp('100%'),
+    alignItems: 'center',
+    marginBottom: hp('4%'),
+  },
   buttonAtualizar: {
     width: '50%',
     backgroundColor: '#EFC51B',
@@ -482,7 +487,8 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '80%',
-    marginLeft: wp('10%'),
+    //marginLeft: wp('10%'),
+    marginBottom: hp('8%')
   },
   buttonText: {
     fontSize: hp(2.5),
@@ -495,7 +501,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    marginBottom: hp('3%'),
+    //marginBottom: hp('3%'),
   },
   imagePickerText: {
     color: '#000000',
@@ -513,41 +519,41 @@ const styles = {
     paddingTop: 0,
     marginBottom: wp(5),
     borderRadius: 10
-},
-searchBar: {
+  },
+  searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#e0e0e0',
     borderRadius: 8,
     margin: wp(2),
     padding: wp(0)
-},
-input: {
+  },
+  input: {
     flex: 1,
     height: 40,
     fontSize: 16,
     color: '#0F1626',
     margin: wp(1)
-},
-iconClose: {
+  },
+  iconClose: {
     marginLeft: wp(2),
-},
-suggestionItem: {
+  },
+  suggestionItem: {
     backgroundColor: '#e0e0e0',
     padding: wp(3),
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-},
-suggestionText: {
+  },
+  suggestionText: {
     fontSize: 16,
     color: '#000',
     margin: wp(2),
     paddingLeft: 3
-},
-loading: {
+  },
+  loading: {
     width: wp('20%'),
-    height: hp('10%'), 
-},
+    height: hp('10%'),
+  },
 };
 
 const pickerSelectStyles = {
