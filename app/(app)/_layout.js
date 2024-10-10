@@ -1,15 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Slot, Stack } from 'expo-router'
 import { Drawer } from 'expo-router/drawer'
 import 'react-native-gesture-handler';
-import { gestureHandlerRootHOC, GestureHandlerRootView } from 'react-native-gesture-handler';
 import HomeHeader from '../../components/HomeHeader'
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useAuth } from '../../context/authContext';
 
-
-function CustomDrawerContent({navigation}) {
+function CustomDrawerContent({ navigation, isClient }) {
   return (
     <View style={styles.drawerContainer}>
       <View style={styles.drawerHeader}>
@@ -20,12 +18,27 @@ function CustomDrawerContent({navigation}) {
           <MaterialIcons name="search" size={24} color="black" />
           <Text style={styles.menuItemText}>Buscar por:</Text>
         </View>
-        <Text style={styles.subMenuItemText}
-        onPress={() => navigation.navigate('pesquisaEspecialidade')}>Especialidade</Text>
-        <Text style={styles.subMenuItemText}
-          onPress={() => navigation.navigate('pesquisaProfissional')}>Profissional</Text>
-        <Text style={styles.subMenuItemText}
-        onPress={() => navigation.navigate('pesquisaLocalizacao')}>Localização</Text>
+        <TouchableOpacity
+          disabled={!isClient}
+          onPress={() => isClient && navigation.navigate('pesquisaEspecialidade')}>
+          <Text style={[styles.subMenuItemText, !isClient && styles.disabledText]}>
+            Especialidade
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          disabled={!isClient}
+          onPress={() => isClient && navigation.navigate('pesquisaProfissional')}>
+          <Text style={[styles.subMenuItemText, !isClient && styles.disabledText]}>
+            Profissional
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          disabled={!isClient}
+          onPress={() => isClient && navigation.navigate('pesquisaLocalizacao')}>
+          <Text style={[styles.subMenuItemText, !isClient && styles.disabledText]}>
+            Localização
+          </Text>
+        </TouchableOpacity>
 
         <View style={styles.menuItem}>
           <MaterialIcons name="star" size={24} color="black" />
@@ -37,16 +50,19 @@ function CustomDrawerContent({navigation}) {
 }
 
 export default function _layout() {
+  const { user, isAuthenticated } = useAuth(); 
+  const isClient = isAuthenticated && user?.role === 'user';
+
   return (
-      <Drawer
-      drawerContent={props => <CustomDrawerContent {...props} />}
+    <Drawer
+      drawerContent={props => <CustomDrawerContent {...props} isClient={isClient} />}
       screenOptions={{
         drawerStyle: {
           backgroundColor: '#e6e6e6',
           width: 240,
         },
       }}>
-        <Drawer.Screen 
+      <Drawer.Screen 
         name='home' 
         options={{
           drawerLabel: 'Home',
@@ -56,7 +72,7 @@ export default function _layout() {
           ),
           header: () => <HomeHeader />
         }}/>
-      </Drawer>
+    </Drawer>
   )
 }
 
@@ -94,5 +110,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 5,
     paddingBottom: 15,
+  },
+  disabledText: {
+    color: 'gray',
   },
 });
