@@ -9,13 +9,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-
-
 function CustomDrawerContent({navigation}) {
   return (
     <View style={styles.drawerContainer}>
       <View style={styles.drawerHeader}>
-        <Text style={styles.drawerHeaderText}>SOCORRO !!</Text>
+        <Text style={styles.drawerHeaderText}>SOCORRO!!</Text>
       </View>
       <View style={styles.drawerMenu}>
         <View style={styles.menuItem}>
@@ -30,10 +28,6 @@ function CustomDrawerContent({navigation}) {
         onPress={() => navigation.navigate('pesquisaLocalizacao')}>Localização</Text>
 
         <View style={styles.menuItem}>
-          <MaterialIcons name="history" size={24} color="black" />
-          <Text style={styles.menuItemText}>Últimos contratados</Text>
-        </View>
-        <View style={styles.menuItem}>
           <MaterialIcons name="star" size={24} color="black" />
           <Text style={styles.menuItemText}>Meus avaliados</Text>
         </View>
@@ -44,7 +38,6 @@ function CustomDrawerContent({navigation}) {
 
 export default function _layout() {
   return (
-    //<GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
       drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{
@@ -63,13 +56,7 @@ export default function _layout() {
           ),
           header: () => <HomeHeader />
         }}/>
-        <Drawer.Screen 
-          name='opcoesPesquisa' 
-          options={{
-            header: () => <HomeHeader />
-          }}/>
       </Drawer>
-    //</GestureHandlerRootView>
   )
 }
 
