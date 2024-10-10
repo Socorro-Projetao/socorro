@@ -122,28 +122,41 @@ export default function PesquisaLocalizacao({ setLocalizacao }) {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Sugestões de locais */}
-        <FlatList
-          data={suggestions}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
-              <Text style={styles.suggestionText}>{item}</Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {suggestions.length > 0 && (
+          <View style={styles.suggestionsContainer}>
+            {suggestions.map((item, index) => (
+              <TouchableOpacity key={index} onPress={() => handleSuggestionSelect(item)}>
+                <Text style={styles.suggestionText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* Lista de profissionais */}
-        {profissionais.length > 0 && (
+        {profissionais.length > 0 ? (
           <View style={styles.professionalList}>
-            <FlatList
-              data={profissionais}
-              renderItem={renderProfessional}
-              keyExtractor={(item, index) => index.toString()}
-              numColumns={3}  
-              columnWrapperStyle={styles.row}
-              ListEmptyComponent={<Text style={styles.vazio}>Nenhum profissional encontrado</Text>}
-            />
+            {profissionais.map((item, index) => (
+              <TouchableOpacity 
+                key={index}
+                style={styles.professionalCard}
+                onPress={() => {
+                  console.log('PROFISSIONAL SELECIONADO: ', item);
+                  router.push({
+                    pathname: "detalhesProfissional",
+                    params: { profissional: JSON.stringify(item) },
+                  });
+                }}
+              >
+                <Image 
+                  source={{ uri: item.profilePicture }} 
+                  style={styles.professionalImage} 
+                />
+                <Text style={styles.professionalName}>{item.username}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
+        ) : (
+          <Text style={styles.vazio}>Nenhum profissional encontrado</Text>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -183,12 +196,18 @@ const styles = {
     fontSize: 16,
     color: '#000',
     paddingLeft: 20
-
   },
   row: {
     justifyContent: 'flex-start', 
     paddingHorizontal: wp(2), 
     marginBottom: wp(3),
+  },
+  professionalList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    paddingHorizontal: wp(2),
+    marginTop: wp(3),
   },
   professionalCard: {
     backgroundColor: '#f0f0f0',
