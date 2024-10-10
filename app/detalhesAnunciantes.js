@@ -19,9 +19,9 @@ export default function detalhesAnunciantes() {
                     <Text style={styles.label}>
                         <Text style={styles.bold}>Nome: </Text>{anuncianteData.nomeFantasia}
                     </Text>
-                    {/* <Text style={styles.label}>
-                        <Text style={styles.bold}>Email: </Text>{email}
-                    </Text> */}
+                    { <Text style={styles.label}>
+                        <Text style={styles.bold}>Email: </Text>{anuncianteData.email}
+                    </Text> }
                 </>
             ) : (
                 <Text>Erro ao carregar os dados do anunciante.</Text>
