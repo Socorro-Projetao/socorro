@@ -215,7 +215,7 @@ const styles = {
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    width: wp(30),
+    width: wp('28%'),
   },
   professionalImage: {
     width: 80,
