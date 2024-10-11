@@ -9,21 +9,22 @@ O projeto é referente a disciplina de __Projeto de Desenvolvimento - Projetão_
 
 
 ## :pushpin: Descrição do projeto
-O sistema visa conectar profissionais experientes que oferecem serviços de reparo e/ou manutenção de imóveis, que desejam ser contatados por prováveis clientes. Os clientes podem se cadastrar e buscar profissionais da especialidade/localização desejadas. Enquanto os profissionais criam perfis detalhados para apresentar suas experiências/especialidades. Tornar viável e facilitar o encontro entre proprietário de imóvel e profissional através de uma única plataforma.
+O sistema visa conectar profissionais experientes que oferecem serviços de reparo e/ou manutenção de imóveis, que desejam ser contatados por prováveis clientes. Os clientes podem se cadastrar e buscar profissionais da especialidade/localização desejadas, enquanto os profissionais criam perfis detalhados para apresentar suas experiências/especialidades. O objetivo principal é facilitar o encontro entre proprietário de imóvel e profissional através de uma única plataforma.
 
 ## :gear: :scroll: Funcionalidades
 
 Requisitos Funcionais / Funcionalidades: 
 * Cadastro de usuários:
-  * Permitir que clientes e profissionais se cadastrem na plataforma, com informações obrigatórias como nome, email, senha e perfil de usuário (cliente ou profissional)
+  * Permitir que clientes, profissionais e anunciantes se cadastrem na plataforma, com informações obrigatórias como nome, email, senha e perfil de usuário (cliente, profissional ou anunciante)
 * Gestão dos perfis:
-  * Profissionais poderão criar, editar e excluir seus perfis, incluindo informações detalhadas sobre as suas especializações, localização, experiências e portfólio de trabalho.
+  * Profissionais poderão criar, editar e excluir seus perfis, incluindo informações detalhadas sobre a sua especialidade, localização, experiências.
+  * Administrador pode visualizar os dados de clientes, profissionais e anunciantes
 * Busca e Filtragem: 
-  * Permitir que os clientes procurem os profissionais com base em critérios como especialidade, localização.
-* Sistema de avaliação:
-  * Após a realização do serviço, o cliente deve avaliar o desempenho do profissional escolhido.
-* Para expôr seu serviço na plataforma e/ou ter prioridade na divulgação de seu perfil, o profissional deverá desembolsar uma taxa.
-* Banner rotativo de propagandas de lojas do ramo imobiliário.
+  * Permitir que os clientes procurem os profissionais com base em critérios como especialidade, localização e nome do profissional.
+* ~Sistema de avaliação:~
+  * ~Após a realização do serviço, o cliente deve avaliar o desempenho do profissional escolhido.~
+* ~Para expôr seu serviço na plataforma e/ou ter prioridade na divulgação de seu perfil, o profissional deverá desembolsar uma taxa.~
+* Banner rotativo de propagandas de lojas do ramo de construção.
 
 
 ## :iphone: Telas do aplicativo
