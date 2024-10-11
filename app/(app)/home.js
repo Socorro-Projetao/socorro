@@ -146,7 +146,7 @@ const Home = () => {
         <Item
           key={item.id}
           name={item.username}
-          role={item.especialidade}
+          role={<Text style={{ fontWeight: 'bold' }}>{item.especialidade}</Text>}
           image={{ uri: item.profilePicture }}
           onPress={() => handleProfessionalPress(item)}
         />
