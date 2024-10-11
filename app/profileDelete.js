@@ -37,6 +37,26 @@ export default function ProfileDelete() {
               const auth = getAuth();
               const db = getFirestore();
               const userToDelete = auth.currentUser;
+
+              const isLoginExpired = () => {              
+                if (userToDelete) {
+                  const lastSignInTime = new Date(userToDelete.metadata.lastSignInTime).getTime(); // Timestamp do último login
+                  const currentTime = Date.now(); // Timestamp atual
+              
+                  // Diferença em milissegundos
+                  const timeDifference = currentTime - lastSignInTime;
+              
+                  // Verifica se passaram mais de 5 minutos (300000 ms)
+                  return timeDifference > 300000; // Retorna true se o login está expirado (mais de 5 minutos)
+                }
+                return false;
+              };
+              
+              
+              if (isLoginExpired()) {
+                throw new Error('Sessão expirada. Faça login novamente.');
+              }
+
               if (userToDelete) {
                 const userId = userToDelete.uid; // UID está correto
 
@@ -76,7 +96,11 @@ export default function ProfileDelete() {
               }
             } catch (error) {
               console.error('Erro ao excluir perfil:', error);
-              Alert.alert('Erro', 'Ocorreu um erro ao excluir o perfil. Tente novamente mais tarde.');
+              if (error.message === 'Sessão expirada. Faça login novamente.') {
+                Alert.alert('Erro', error.message + ' Faça login novamente.');
+              } else {
+                Alert.alert('Erro', 'Ocorreu um erro ao excluir o perfil. Tente novamente mais tarde.');
+              }
             }
           },
           style: 'destructive',
