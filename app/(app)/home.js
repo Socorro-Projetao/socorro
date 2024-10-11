@@ -199,13 +199,28 @@ const Home = () => {
           />
         </>
       ) : (
-        <Text style={styles.noAccessText}>Você não tem acesso.</Text>
+<View style={styles.containerInicial}>
+  <Image 
+    source={require('../../assets/images/logo-SOCORRO.png')} 
+    style={styles.imageInicial} 
+    resizeMode="contain" 
+  />
+</View>
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  containerInicial: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center', 
+  },
+  imageInicial: {
+    width: '100%', 
+    height: '100%', 
+  },
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
@@ -256,8 +271,8 @@ const styles = StyleSheet.create({
     height: 100,
   },
   adImage: {
-    width: '100%', // Make the ad image fill the width of the card
-    height: '100%', // Make the ad image fill the height of the card
+    width: '100%', 
+    height: '100%', 
     borderRadius: 10,
     marginBottom: 5,
   },
