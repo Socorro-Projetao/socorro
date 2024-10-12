@@ -5,23 +5,6 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'expo-router';
 
-const publicidade = [
-  {
-    id: 1,
-    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDynvtt5yxGi6BP3z9DSolriiaSGBUGxwq0w&s',
-    userId: 'rMUj5YUBsaUqhK7OYrKoCAsrq7M2',
-  },
-  {
-    id: 2,
-    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxD5tbtCchVtoJnfV8SXEOYZvA0jN6wAAVQA&s',
-    userId: 'IbDeJAMLNAV8GhetG9dk5D1KwtH2',
-  },
-  {
-    id: 3,
-    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5IUG1pG0Jb79b84qJa_i9zvYiaFurGguuWw&s',
-    userId: 'nAIQOvWCtdb83ILmYdgqnuhd1S52',
-  },
-];
 
 const Item = ({ image, name, role, onPress }) => (
   <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -34,7 +17,9 @@ const Item = ({ image, name, role, onPress }) => (
 
 const Anuncio = ({ profilePicture }) => (
   <TouchableOpacity style={styles.cardAnuncio}>
-    <Image source={{ uri: profilePicture }} style={styles.adImage} resizeMode="cover" />
+    {profilePicture && (
+      <Image source={{ uri: profilePicture }} style={styles.adImage} resizeMode="cover" />
+    )}
   </TouchableOpacity>
 );
 
@@ -44,21 +29,25 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [randomAnuncio, setRandomAnuncio] = useState({});
   const [professionals, setProfessionals] = useState([]);
+  const [anunciantes, setAnunciantes] = useState([]);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * publicidade.length);
-    setRandomAnuncio(publicidade[randomIndex]);
-  }, []);
+    if (anunciantes.length > 0) { 
+        const randomIndex = Math.floor(Math.random() * anunciantes.length);
+        setRandomAnuncio(anunciantes[randomIndex]);
+    }
+  }, [anunciantes]); 
 
-  // 5 segundos de intervalo
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * publicidade.length);
-      setRandomAnuncio(publicidade[randomIndex]);
+        if (anunciantes.length > 0) { 
+            const randomIndex = Math.floor(Math.random() * anunciantes.length);
+            setRandomAnuncio(anunciantes[randomIndex]);
+        }
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [anunciantes]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -79,6 +68,32 @@ const Home = () => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchAnunciantes();
+  }, []);
+
+
+  const fetchAnunciantes = async () => {
+    setLoading(true);
+    try {
+      const db = getFirestore();
+      const anunciantesCollection = collection(db, 'anunciantes');
+      const anunciantesSnapshot = await getDocs(anunciantesCollection);
+      const anunciantesList = anunciantesSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+        };
+      });
+      setAnunciantes(anunciantesList);
+    } catch (error) {
+      console.error('Erro ao buscar anunciantes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchProfessionals();
@@ -159,14 +174,22 @@ const Home = () => {
 
   const renderSection = ({ section }) => {
     if (section.title === 'Anúncios') {
-      return (
-        <Anuncio
-          key={section.data[0].id}
-          profilePicture={section.data[0].profilePicture}
-        />
-      );
+        // Verificar se `randomAnuncio` existe e se contém `profilePicture`
+        if (loading) {
+            return <Text>Carregando anúncios...</Text>;
+        } else if (section.data.length > 0 && section.data[0] && section.data[0].profilePicture) {
+            return (
+                <Anuncio
+                    key={section.data[0].id}
+                    profilePicture={section.data[0].profilePicture}
+                />
+            );
+        } else {
+            // Caso não haja dados ou o `profilePicture` esteja ausente
+            return <Text>Nenhum anúncio disponível</Text>;
+        }
     } else {
-      return renderHorizontalFlatList(section.data[0]);
+        return renderHorizontalFlatList(section.data[0]);
     }
   };
 
