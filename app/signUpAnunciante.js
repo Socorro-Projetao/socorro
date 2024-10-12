@@ -92,7 +92,6 @@ export default function signUpAnunciante() {
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 4],
             quality: 1,
         })
 
@@ -128,7 +127,7 @@ export default function signUpAnunciante() {
                         {profileImage ? (
                             <Image source={{ uri: profileImage }} style={styles.profileImage} />
                         ) : (
-                            <Text style={styles.imagePickerText}>Selecionar imagem de perfil</Text>
+                            <Text style={styles.imagePickerText}>Selecionar imagem do anúncio</Text>
                         )}
                     </View>
                 </TouchableOpacity>
