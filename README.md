@@ -36,7 +36,7 @@ Requisitos Funcionais / Funcionalidades:
 
 ### [Estudo de Viabilidade](https://docs.google.com/document/d/1uNlZMtgUhKLh8W3SEM6LUM2YD8OpLJsBkHhWg8HcUEY/edit?usp=sharing)
 ### [Plano de Projeto (Histórias de usuário | MER | Protótipo | Arquitetura + Riscos | Milestones)](https://docs.google.com/document/d/1-i16qtuT6SRj2m4C9Nv3nBQ4aFyuRS_4MnmMf7GGBt8/edit?usp=sharing)
-### [Pitch](https://www.canva.com/design/DAGMnUepapo/5RW3c_1TLA62IoZ2YxxCtQ/view?utm_content=DAGMnUepapo&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+### [Pitch](https://www.canva.com/design/DAGTWxsRuqo/ogI3aB1hiNESOpH6B2jUUQ/watch?utm_content=DAGTWxsRuqo&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 ### [Vídeo Pitch](https://drive.google.com/file/d/1xlXPNCi_IxsslyKm9Bf0QOV1DFuR3YQO/view?usp=sharing)
 
 ## :hammer_and_wrench: Tecnologias Usadas
